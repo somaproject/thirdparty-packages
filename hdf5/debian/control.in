@@ -1,0 +1,160 @@
+Source: hdf5
+Section: science
+Priority: optional
+Maintainer: Ubuntu MOTU Developers <ubuntu-motu@lists.ubuntu.com>
+XSBC-Original-Maintainer: Debian GIS Project <pkg-grass-devel@lists.alioth.debian.org>
+Uploaders: Francesco Paolo Lovergine <frankie@debian.org>
+Build-Depends: libmpich1.0-dev (>= 1.2.7-1), zlib1g-dev, lam4-dev (>= 7.1.1-3.2), 
+ libopenmpi-dev [!arm !armel !hppa !mips !mipsel !s390], libjpeg62-dev, debhelper (>> 5), sed (>=4.1.5)
+Standards-Version: 3.7.3
+Homepage: http://hdf.ncsa.uiuc.edu/HDF5/
+Vcs-Browser: http://svn.debian.org/viewsvn/pkg-grass/packages/hdf5/trunk/
+Vcs-Svn: svn://svn.debian.org/svn/pkg-grass/packages/hdf5/trunk
+
+Package: libhdf5-serial-1.8.3-0
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}
+Conflicts: libhdf5-1.8.3-0
+Provides: libhdf5-1.8.3-0
+Description: Hierarchical Data Format 5 (HDF5) - runtime files - serial version
+ HDF5 is a file format and library for storing scientific data. 
+ HDF5 was designed and implemented to address the deficiencies of
+ HDF4.x. It has a more powerful and flexible data model, supports
+ files larger than 2 GB, and supports parallel I/O.
+ .
+ This package contains runtime files for serial platforms.
+
+Package: libhdf5-serial-dev
+Section: libdevel
+Architecture: any
+Depends: libhdf5-serial-1.8.3-0 , libc6-dev, zlib1g-dev, libjpeg62-dev
+Conflicts: libhdf5-dev
+Provides: libhdf5-dev
+Suggests: libhdf5-doc
+Description: Hierarchical Data Format 5 (HDF5) - development files - serial version
+ HDF5 is a file format and library for storing scientific data. 
+ HDF5 was designed and implemented to address the deficiencies of
+ HDF4.x. It has a more powerful and flexible data model, supports
+ files larger than 2 GB, and supports parallel I/O.
+ .
+ This package contains development files for serial platforms.
+
+Package: libhdf5-lam-1.8.3-0
+Section: libs
+Priority: extra
+Architecture: any
+Depends: ${shlibs:Depends}
+Conflicts: libhdf5-1.8.3-0
+Provides: libhdf5-1.8.3-0
+Description: Hierarchical Data Format 5 (HDF5) - runtime files - LAM version
+ HDF5 is a file format and library for storing scientific data. 
+ HDF5 was designed and implemented to address the deficiencies of
+ HDF4.x. It has a more powerful and flexible data model, supports
+ files larger than 2 GB, and supports parallel I/O.
+ .
+ This package contains runtime files for use with LAM.
+
+Package: libhdf5-lam-dev
+Section: libdevel
+Priority: extra
+Architecture: any
+Depends: libhdf5-lam-1.8.3-0 , libc6-dev, zlib1g-dev, libjpeg62-dev, lam4-dev
+Conflicts: libhdf5-dev
+Provides: libhdf5-dev
+Suggests: libhdf5-doc
+Description: Hierarchical Data Format 5 (HDF5) - development files - LAM version
+ HDF5 is a file format and library for storing scientific data. 
+ HDF5 was designed and implemented to address the deficiencies of
+ HDF4.x. It has a more powerful and flexible data model, supports
+ files larger than 2 GB, and supports parallel I/O.
+ .
+ This package contains development files for use with LAM.
+
+Package: libhdf5-openmpi-1.8.3-0
+Section: libs
+Priority: extra
+Architecture: @ARCHS@
+Depends: ${shlibs:Depends}
+Conflicts: libhdf5-1.8.3-0
+Provides: libhdf5-1.8.3-0
+Description: Hierarchical Data Format 5 (HDF5) - runtime files - OpenMPI version
+ HDF5 is a file format and library for storing scientific data. 
+ HDF5 was designed and implemented to address the deficiencies of
+ HDF4.x. It has a more powerful and flexible data model, supports
+ files larger than 2 GB, and supports parallel I/O.
+ .
+ This package contains runtime files for use with OpenMPI.
+
+Package: libhdf5-openmpi-dev
+Section: libdevel
+Priority: extra
+Architecture: @ARCHS@
+Depends: libhdf5-openmpi-1.8.3-0 , libc6-dev, zlib1g-dev, libjpeg62-dev, libopenmpi-dev
+Conflicts: libhdf5-dev
+Provides: libhdf5-dev
+Suggests: libhdf5-doc
+Description: Hierarchical Data Format 5 (HDF5) - development files - OpenMPI version
+ HDF5 is a file format and library for storing scientific data. 
+ HDF5 was designed and implemented to address the deficiencies of
+ HDF4.x. It has a more powerful and flexible data model, supports
+ files larger than 2 GB, and supports parallel I/O.
+ .
+ This package contains development files for use with OpenMPI.
+
+Package: libhdf5-mpich-1.8.3-0
+Section: libs
+Priority: extra
+Architecture: any
+Depends: ${shlibs:Depends}
+Conflicts: libhdf5-1.8.3-0
+Provides: libhdf5-1.8.3-0
+Description: Hierarchical Data Format 5 (HDF5) - runtime files - MPICH version
+ HDF5 is a file format and library for storing scientific data. 
+ HDF5 was designed and implemented to address the deficiencies of
+ HDF4.x. It has a more powerful and flexible data model, supports
+ files larger than 2 GB, and supports parallel I/O.
+ .
+ This package contains runtime files for use with MPICH. Warning: the
+ C++ interface is not provided for this version.
+
+Package: libhdf5-mpich-dev
+Section: libdevel
+Priority: extra
+Architecture: any
+Depends: libhdf5-mpich-1.8.3-0 , libc6-dev, zlib1g-dev, libjpeg62-dev, libmpich1.0-dev
+Conflicts: libhdf5-dev
+Provides: libhdf5-dev
+Suggests: libhdf5-doc
+Description: Hierarchical Data Format 5 (HDF5) - development files - MPICH version
+ HDF5 is a file format and library for storing scientific data. 
+ HDF5 was designed and implemented to address the deficiencies of
+ HDF4.x. It has a more powerful and flexible data model, supports
+ files larger than 2 GB, and supports parallel I/O.
+ .
+ This package contains development files for use with MPICH. Warning:
+ the C++ interface is not provided for this version.
+
+Package: libhdf5-doc
+Section: doc
+Architecture: all
+Suggests: libhdf5-dev, www-browser, pdf-viewer, doc-base
+Description: Hierarchical Data Format 5 (HDF5) - Documentation
+ HDF5 is a file format and library for storing scientific data. 
+ HDF5 was designed and implemented to address the deficiencies of
+ HDF4.x. It has a more powerful and flexible data model, supports
+ files larger than 2 GB, and supports parallel I/O.
+ .
+ This package contains documentation for HDF5.
+
+Package: hdf5-tools
+Section: science
+Architecture: any
+Depends: ${shlibs:Depends}
+Description: Hierarchical Data Format 5 (HDF5) - Runtime tools 
+ HDF5 is a file format and library for storing scientific data. 
+ HDF5 was designed and implemented to address the deficiencies of
+ HDF4.x. It has a more powerful and flexible data model, supports
+ files larger than 2 GB, and supports parallel I/O.
+ .
+ This package contains runtime tools for HDF5.

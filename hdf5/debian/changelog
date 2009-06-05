@@ -1,0 +1,405 @@
+hdf5 (1.8.3-0~soma2) jaunty; urgency=low
+
+  * initial launchpad build
+
+ -- Stuart Layton <slayton@mit.edu>  Fri, 05 Jun 2009 08:03:01 -0400
+
+hdf5 (1.8.3-0~soma1) jaunty; urgency=low
+
+  * upgraded to verion 1.8.3 
+  * edit rules file to not install docs, I'm sorry about this but its the only way I could gee the package to
+    build
+
+ -- Stuart Layton <slayton@mit.edu>  Thu, 04 Jun 2009 23:02:37 -0400
+
+hdf5 (1.6.6-4ubuntu1) intrepid; urgency=low
+
+  * perform/zip_perf.c: add open mode flags for O_CREAT (required for
+    -D_FORTIFY_SOURCE=2).
+
+ -- Kees Cook <kees@ubuntu.com>  Sun, 04 May 2008 08:47:59 -0700
+
+hdf5 (1.6.6-4) unstable; urgency=low
+
+  * Previous fix had typos. Also now it controls archs in control.in by debian/rules. 
+    Added versioning for sed to use -e arg for completeness.
+    (closes: #473871)
+
+ -- Francesco Paolo Lovergine <frankie@debian.org>  Wed, 02 Apr 2008 12:11:24 +0200
+
+hdf5 (1.6.6-3) unstable; urgency=low
+
+  * Fixating for most (not any) archs debhelper flag.
+    (closes: #473669)
+
+ -- Francesco Paolo Lovergine <frankie@debian.org>  Tue, 01 Apr 2008 11:25:56 +0200
+
+hdf5 (1.6.6-2) unstable; urgency=low
+
+  * Fixed changelog due to patch dropped before release, but still logged.
+  * Do not create the libdhf5-openmpi-* packages on some selected
+    architectures. Thanks Rafael Laboissiere (closes: #473328).
+
+ -- Francesco Paolo Lovergine <frankie@debian.org>  Mon, 31 Mar 2008 16:47:51 +0200
+
+hdf5 (1.6.6-1) unstable; urgency=low
+
+  [ Francesco Paolo Lovergine ]
+  * New upstream release. All Debian source changes already merged.
+  * Manually run "autoupdate; libtoolize --force --copy; aclocal; autoheader;
+    autoconf" in the base directory, and "autoupdate; libtoolize --force
+    --copy; aclocal; autoconf" in the c++/ directory.
+  * Added Homepage field in debian/control.in
+  * Watch file updated.
+    (closes: #449723)
+  * Fixed rpath issue with dh_shlibdeps due to missing library path. Thanks both
+    Adam C Powell IV and Riku Voipio for NMU.
+    (closes: #463393,#456862,#466739)
+  * [Lintian] Policy bumped to 3.7.3
+  * [Lintian] Now using ${binary:Version} in debian/control.in
+  * Added Vcs-* fields to debian/control.in
+
+  [ Adam C Powell IV ]
+  * Added OpenMPI version (closes: #457080)
+
+ -- Francesco Paolo Lovergine <frankie@debian.org>  Wed, 02 Jan 2008 16:38:38 +0100
+
+hdf5 (1.6.5-5) unstable; urgency=low
+
+  * Changed maintainer and added uploards for true in control.in
+  * Moved to debhelper compatibility level 5.
+
+ -- Francesco Paolo Lovergine <frankie@debian.org>  Mon, 14 May 2007 23:40:30 +0200
+
+hdf5 (1.6.5-4) unstable; urgency=low
+
+  * New maintainership team. Added me as uploader.
+    (closes: #393101)
+  * Normalized descriptions in debian/control.
+  * Policy bumped to 3.7.2 (no changes)
+  * Patched c++/src/H5PropList.cpp for gcc 4.3. Thanks Martin Michlmayr.
+    (closes: #417234)
+
+ -- Francesco Paolo Lovergine <frankie@debian.org>  Mon, 14 May 2007 15:42:13 +0200
+
+hdf5 (1.6.5-3) unstable; urgency=low
+
+  * Orphan package.
+
+ -- Josselin Mouette <joss@debian.org>  Sun, 15 Oct 2006 03:08:38 +0200
+
+hdf5 (1.6.5-2.1) unstable; urgency=low
+
+  * Non maintainer upload
+  * Added patch to fix CommonFG::getObjnameByIdx.  Closes: #368974
+
+ -- Enrico Zini <enrico@debian.org>  Wed, 20 Sep 2006 10:34:22 +0200
+
+hdf5 (1.6.5-2) unstable; urgency=medium
+
+  * config/gnu-flags: don't use -fomit-frame-pointer on m68k, to avoid 
+    an ICE.
+
+ -- Josselin Mouette <joss@debian.org>  Mon,  3 Apr 2006 22:35:40 +0200
+
+hdf5 (1.6.5-1) unstable; urgency=low
+
+  * New upstream release.
+  * Re-run "autoupdate; libtoolize --force --copy; aclocal; autoheader;
+    autoconf" in the base directory, and "autoupdate; libtoolize --force
+    --copy; aclocal; autoconf" in the c++/ directory.
+  * Remove the C++ transition's c2 in package names.
+  * For some random reason, the C++ library cannot be built in parallel
+    builds anymore *sigh*.
+    + Only use --enable-cxx for the serial build.
+    + Make a specific shlibs file for the serial package.
+
+ -- Josselin Mouette <joss@debian.org>  Sat,  4 Mar 2006 15:51:19 +0100
+
+hdf5 (1.6.4-4) unstable; urgency=medium
+
+  * src/H5detect.c: correctly restore the signal mask when trapping 
+    SIGBUS or SIGSEGV. This should make hdf5 build on the ia64 buildd.
+
+ -- Josselin Mouette <joss@debian.org>  Thu,  8 Sep 2005 20:50:09 +0200
+
+hdf5 (1.6.4-3) unstable; urgency=low
+
+  * Rebuild against GCC and G++ 4.0 (closes: #318164).
+  * Rename the library packages with a "c2" at the end.
+  * Standards-version is 3.6.2 (no changes).
+  * Bump build-dependencies on lam and mpich appropriately.
+  * Don't recommend mpich-bin anymore, libmpich1.0 already does it.
+
+ -- Josselin Mouette <joss@debian.org>  Wed, 31 Aug 2005 13:48:53 +0200
+
+hdf5 (1.6.4-2) unstable; urgency=low
+
+  * c++/config/ia64-linux-gnu: use a path relative to $srcdir to fix FTBFS on
+    ia64.
+
+ -- Josselin Mouette <joss@debian.org>  Tue, 14 Jun 2005 20:51:30 +0200
+
+hdf5 (1.6.4-1) unstable; urgency=low
+
+  * New upstream release (closes: #301418).
+    + Update copyright.
+    + Re-run "autoupdate; libtoolize --force --copy; aclocal-1.7; autoheader;
+      autoconf" in the base directory, and "autoupdate; libtoolize --force
+      --copy; aclocal-1.7; autoconf" in the c++/ directory.
+  * debian/{rules,control.in}: enable again the C++ build for MPICH.
+    + Build-depend on mpich 1.2.5.3-2.
+  * Build-depend on libmpich1.0-dev instead of mpich, recommend mpich-bin
+    in the binary package, and make the development package depend on
+    libmpich1.0-dev.
+  * debian/docs_shlib: ship RELEASE.txt
+  * debian/watch: added.
+  * debian/man/h5{jam,unjam,repack}: write manpages from the HTML
+    documentation for the new commands.
+  * config/gnu-flags: don't force -O3 for GCC 3.3/3.4; according to upstream
+    it can lead to some type conversion issues.
+
+ -- Josselin Mouette <joss@debian.org>  Sun,  5 Jun 2005 11:00:50 +0200
+
+hdf5 (1.6.2-3) unstable; urgency=low
+
+  * debian/{rules,control.in}: provide correct dependencies for libhdf5 and
+    libhdf5_cpp. Only the latter is unavailable with the mpich version.
+
+ -- Josselin Mouette <joss@debian.org>  Fri, 21 May 2004 03:44:58 +0200
+
+hdf5 (1.6.2-2) unstable; urgency=low
+
+  * debian/rules: don't build the C++ interface for the mpich version.
+  * debian/control.in:
+    + make the mpich shared library require mpich | mpich-mpd.
+    + document that there are no C++ bindings for this version.
+    + don't provide libhdf5-@VERSION@-0 as there is no C++ library.
+
+ -- Josselin Mouette <joss@debian.org>  Fri, 14 May 2004 12:42:00 +0200
+
+hdf5 (1.6.2-1) unstable; urgency=low
+
+  * New upstream release. I don't like to introduce a SONAME change at this
+    time, but it is needed by PyTables 0.8.
+    + Re-run autoupdate; libtoolize --force --copy; aclocal-1.7;
+      autoheader; autoconf.
+    + Updated copyright.
+  * config/gnu-flags: re-enable optimization with gcc 3.3.
+  * config/ia64-linux-gnu: remove patch, ecc is now autodetected.
+  * Enable C++ library:
+    + c++/config: make C++ stuff work like C stuff.
+    + c++/config/commence.in: grab correct libtool.
+    + c++/config/conclude.in: don't use /. at the end of the install path for
+      libraries, as libtool doesn't like it for an obscure reason.
+    + c++/src/Makefile.in: link explicitly with libhdf5.la.
+    + Run autoupdate; libtoolize --force --copy; aclocal-1.7;
+      autoconf in the c++ directory.
+    + debian/rules:
+      - Add --enable-cxx and use correct CXX for parallel builds.
+      - Split dh_shlibdeps calls for each package, to generate correct
+        dependencies for the C++ library.
+  * Add manpages from Jason Kraftcheck <kraftche@cae.wisc.edu>
+    (closes: #236026):
+    + Put them in debian/man.
+    + Some unused files are in debian/man/unused.
+    + debian/ hdf5-utils.1, hdf5-tools.README.Debian, hdf5-tools.links:
+      removed.
+    + debian/hdf5-tools.manpages: use the above manpages.
+  * debian/libhdf5-doc.install: install examples.
+  * debian/rules: split dh_makeshlibs calls so that the correct library is
+    required when building against libhdf5-{mpich,lam}-dev.
+
+ -- Josselin Mouette <joss@debian.org>  Fri, 19 Mar 2004 16:38:58 +0100
+
+hdf5 (1.6.1-4) unstable; urgency=medium
+
+  * Make libhdf5-lam-dev depend on lam4-dev (closes: #230742).
+
+ -- Josselin Mouette <joss@debian.org>  Tue,  3 Feb 2004 15:59:19 +0100
+
+hdf5 (1.6.1-3) unstable; urgency=low
+
+  * Don't use gcc-3.2 on hppa anymore, the ICE is fixed.
+  * Build-depend on lam-dev instead of lam3-dev.
+
+ -- Josselin Mouette <joss@debian.org>  Thu, 22 Jan 2004 09:36:51 +0100
+
+hdf5 (1.6.1-2) unstable; urgency=low
+
+  * config/gnu-flags: remove -Wpadded no avoid failure when the 
+    configure scripts checks for -fPIC.
+
+ -- Josselin Mouette <joss@debian.org>  Tue,  4 Nov 2003 23:24:54 +0100
+
+hdf5 (1.6.1-1) unstable; urgency=low
+
+  * New upstream release.
+  * Replace the broken upstream tarball (including the same file twice)
+    by a locally-generated one.
+  * Re-run autoupdate; libtoolize --force --copy; aclocal-1.7;
+    autoheader; autoconf.
+  * debian/rules: make the shlibs file ask for the serial package by
+    default.
+  * debian/compat: new file.
+  * debian/control.in: standards version is 3.6.1.
+
+ -- Josselin Mouette <joss@debian.org>  Tue, 28 Oct 2003 15:07:40 +0100
+
+hdf5 (1.6.0-3) unstable; urgency=low
+
+  * Provide correct SONAME versioning, forking from upstream
+    (closes: #202260).
+    - config/commence.in: use the upstream version as a release number
+      for libtool.
+    - rework debian/ stuff so that it doesn't need no be changed upon
+      upgrade.
+    - update README.Debian files.
+
+ -- Josselin Mouette <joss@debian.org>  Mon, 21 Jul 2003 18:54:43 +0200
+
+hdf5 (1.6.0-2) unstable; urgency=low
+
+  * Separate README.Debian for each package.
+  * Include HISTORY.txt in shared library packages.
+  * Remove ecc crap on ia64 (closes: #201488).
+  * Use gcc-3.2 on hppa (ICE with gcc-3.3).
+  * Remove Makefile.in files from documentation package.
+  * libhdf5-doc now Suggests: doc-base.
+
+ -- Josselin Mouette <joss@debian.org>  Wed, 16 Jul 2003 15:41:22 +0200
+
+hdf5 (1.6.0-1) unstable; urgency=low
+
+  * New upstream release.
+    - Fix data corruption bug (closes: #193033).
+  * Update copyright information.
+  * Re-run autoupdate; libtoolize --force --copy; aclocal-1.7; autoheader;
+    autoconf.
+  * Update debian/ files to match version 1.6.0.
+  * Standards-version is 3.6.0.
+  * Move development packages to libdevel.
+  * Make MPI packages priority extra.
+  * Update manpage stuff.
+  * Install README.Debian in all packages.
+
+ -- Josselin Mouette <joss@debian.org>  Tue, 15 Jul 2003 22:58:48 +0200
+
+hdf5 (1.4.5-2) unstable; urgency=low
+
+  * Re-ran autoupdate; libtoolize --force --copy; aclocal-1.7; autoheader;
+    autoconf. Hopefully closes: #184259.
+
+ -- Josselin Mouette <joss@debian.org>  Tue, 11 Mar 2003 19:51:19 +0100
+
+hdf5 (1.4.5-1) unstable; urgency=low
+
+  * New upstream release.
+  * Updated control and rules regarding the new version.
+  * config/gnu-flags: use upstream gcc-3.2 detection.
+  * configure.in: revert our changes.
+  * debian/rules: enable LFS on all arches without testing, as upstream
+    seems to think it works even on 64-bit arches. Testing on ia64,
+    alpha and hppa is welcome.
+  * debian/control: put upstream URL in package descriptions.
+  * debian/rules: make mpich being detected only by using mpicc.mpich.
+
+ -- Josselin Mouette <joss@debian.org>  Mon, 10 Mar 2003 16:00:56 +0100
+
+hdf5 (1.4.4-2) unstable; urgency=low
+
+  * config/gnu-flags: made the build system know about GCC 3.2. Used GCC
+    3.1 flags and added -g to $PROD_CFLAGS (the binaries are stripped
+    later). This should solve issues on m68k by using -O2 again.
+  * debian/rules: removed a bit of unuseful crap.
+  * Support the noopt flag in DEB_BUILD_OPTIONS.
+  * Enabled thread-safety.
+
+ -- Josselin Mouette <joss@debian.org>  Thu,  6 Feb 2003 11:06:49 +0100
+
+hdf5 (1.4.4-1) unstable; urgency=low
+
+  * New maintainer (closes: #174114).
+  * Standards-version 3.5.8.
+  * Use debhelper mode 4.
+  * Renewed rules file.
+  * configure.in: changed test for LFS to use standard autoconf macros.
+  * Ran autoupdate; libtoolize --force --copy; aclocal; autoheader; autoconf
+  * debian/control: removed full stops at the end of package names.
+  * Don't use autotools-dev anymore.
+
+ -- Josselin Mouette <joss@debian.org>  Wed, 15 Jan 2003 16:36:04 +0100
+
+hdf5 (1.4.4-0.2) unstable; urgency=low
+
+  * debian/rules: removed autoconf invocation.
+  * debian/control: removed build-dependency on autoconf.
+  * ran libtoolize --force --copy; aclocal; autoheader; autoconf
+    with latest libtool, automake and autoconf (closes: #163606).
+  * debian/control: correct spelling errors in descriptions
+    (closes: #124731, #124974, #124975, #124976, #124977, #124978, 
+             #124979, #124980).
+
+ -- Josselin Mouette <joss@debian.org>  Tue,  8 Oct 2002 21:02:19 +0200
+
+hdf5 (1.4.4-0.1) unstable; urgency=low
+
+  * NMU.
+  * New upstream release.
+  * Remove build dependency on HDF4 and --with-hdf4 (deprecated).
+  * Update a few things in debian/rules, including a config.guess and
+    config.sub automatic update (closes: #134248).
+  * Now build depend on autotools-dev.
+  * Stop build-depending on autoconf2.13.
+  * Updated sparse manpage to remove hdf4 references and document new
+    scripts.
+  * Upstream seems to change their ABI at will, let's use virtual
+    packages to avoid problems.
+  * Correct dependencies for hdf5-tools and libhdf5-*-dev.
+  * Added doc-base entry.
+  * Removed the MSWord file in documentation.
+
+ -- Josselin Mouette <joss@debian.org>  Sat, 14 Sep 2002 00:50:44 +0200
+
+hdf5 (1.4.2-2.2) unstable; urgency=low
+
+  * New NMU to correct a problem with the previous one, sorry.
+  * Added a build dependency on autoconf2.13.
+
+ -- Josselin Mouette <joss@debian.org>  Mon,  2 Sep 2002 15:00:25 +0200
+
+hdf5 (1.4.2-2.1) unstable; urgency=low
+
+  * NMU during bug squashing party
+  * Set a versioned build-dependency on mpich 1.2.4-3, it should
+    build everywhere now (closes: #133327).
+
+ -- Josselin Mouette <joss@debian.org>  Fri, 30 Aug 2002 23:43:33 +0200
+
+hdf5 (1.4.2-2) unstable; urgency=high
+
+  * Applied upstream patch1, fixes data corruption bug (Closes: #114914)
+  * Fixed up some Section:'s, fixed hdf5-utils Description
+  * High priority, because of 114914
+  * Cleaned out cruft from README.Debian
+
+ -- Brian Russo <wolfie@debian.org>  Sun, 14 Oct 2001 23:18:08 -1000
+
+hdf5 (1.4.2-1) unstable; urgency=medium
+
+  * Utils are now in their own package (hdf5-tools)
+  * New upstream source release (1.4.2) (Closes: #107644)
+  * Fixed dependency re threaded libs needing serial lib (Closes: #110320, #106183)
+  * Recompiled with lam3 (Closes: #106950)
+  * Should handle binary-only builds correctly now (Closes: #109528)
+  
+ -- Brian Russo <wolfie@debian.org>  Thu, 20 Sep 2001 00:47:31 -1000
+
+hdf5 (1.4.1-1) unstable; urgency=low
+
+  * The octave-people-and-edd-will-be-happy release
+  * (Closes: #81874) 
+
+ -- Brian Russo <wolfie@debian.org>  Wed, 13 Jun 2001 14:31:17 +1100
+
+

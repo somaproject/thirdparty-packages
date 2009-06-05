@@ -1,0 +1,4 @@
+libhdf5_cpp-1.8.3 0 libhdf5-serial-1.8.3-0
+libhdf5-1.8.3 0 libhdf5-serial-1.8.3-0 | libhdf5-1.8.3-0
+libh5test-1.8.3 0 libhdf5-serial-1.8.3-0 | libhdf5-1.8.3-0
+libhdf5_hl-1.8.3 0 libhdf5-serial-1.8.3-0 | libhdf5-1.8.3-0

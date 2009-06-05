@@ -1,0 +1,257 @@
+#!/usr/bin/make -f
+
+# debian/rules for libhdf5,
+# (c) 2001 Brian Russo, under GPL. 
+# (c) 2003 Josselin Mouette
+
+# Uncomment this to turn on verbose mode.
+#export DH_VERBOSE=1
+
+package = libhdf5
+pkgversion ?= $(shell dpkg-parsechangelog | awk '/^Version:/ {print $$2}')
+version ?= $(shell echo $(pkgversion) | sed 's/-[^-]*$$//')
+serpack = $(package)-serial-$(version)-0
+lampack = $(package)-lam-$(version)-0
+openmpipack = $(package)-openmpi-$(version)-0
+mpichpack = $(package)-mpich-$(version)-0
+virtpack = $(package)-$(version)-0
+
+DEB_HOST_GNU_TYPE   ?= $(shell dpkg-architecture -qDEB_HOST_GNU_TYPE)
+DEB_BUILD_GNU_TYPE  ?= $(shell dpkg-architecture -qDEB_BUILD_GNU_TYPE)
+DEB_BUILD_ARCH      ?= $(shell dpkg-architecture -qDEB_BUILD_ARCH)
+
+# To be used if binary packages were buildable on any arch
+#ARCH_FLAG=-a
+#ARCHS=any
+ARCH_FLAG=-s
+ARCHS=alpha amd64 i386 ia64 powerpc sparc kfreebsd-i386 kfreebsd-amd64
+
+ifeq ($(DEB_BUILD_ARCH),arm)
+build_openmpi = no
+else ifeq ($(DEB_BUILD_ARCH),armel)
+build_openmpi = no
+else ifeq ($(DEB_BUILD_ARCH),hppa)
+build_openmpi = no
+else ifeq ($(DEB_BUILD_ARCH),mips)
+build_openmpi = no
+else ifeq ($(DEB_BUILD_ARCH),mipsel)
+build_openmpi = no
+else ifeq ($(DEB_BUILD_ARCH),s390)
+build_openmpi = no
+else
+build_openmpi = yes
+endif
+
+ifeq ($(build_openmpi),yes)
+configure_stamp_openmpi = configure-stamp-openmpi
+build_stamp_openmpi = build-stamp-openmpi
+install_openmpi = install-openmpi
+else
+configure_stamp_openmpi =
+build_stamp_openmpi = 
+install_openmpi =
+endif
+
+ifeq (,$(findstring noopt,$(DEB_BUILD_OPTIONS)))
+       USE_PROD = yes
+else
+       USE_PROD = no
+endif
+
+### let's keep it commented out in case a compiler error happens again
+# ifeq (hppa-linux,$(DEB_BUILD_GNU_TYPE))
+#   DEBCC=gcc-3.2
+#   DEBCXX=g++-3.2
+# else
+    DEBCC=gcc
+    DEBCXX=g++
+# endif
+###
+
+export MPICH_CC=$(DEBCC)
+export MPICH_CLINKER=$(DEBCC)
+export MPICH_CCC=$(DEBCXX)
+export MPICH_CCLINKER=$(DEBCXX)
+export LAMMPICC=$(DEBCC)
+export LAMMPICXX=$(DEBCXX)
+
+CONFIGURE_FLAGS = --prefix=/usr --host=$(DEB_HOST_GNU_TYPE) \
+		  --build=$(DEB_BUILD_GNU_TYPE) \
+		  --mandir=\$${prefix}/share/man \
+		  --with-pthread  --enable-linux-lfs \
+		  --enable-shared --enable-production=$(USE_PROD)
+
+
+configure: configure-stamp-debian configure-stamp-serial configure-stamp-lam $(configure_stamp_openmpi) configure-stamp-mpich
+
+configure-stamp-debian: debian/control.in
+	cd debian && for i in *_devlib; do j=`basename $$i _devlib`; \
+		ln -sf $$i $(package)-serial-dev.$$j ; \
+		ln -sf $$i $(package)-lam-dev.$$j ; \
+		ln -sf $$i $(package)-openmpi-dev.$$j ; \
+		ln -sf $$i $(package)-mpich-dev.$$j ; \
+		done
+	cd debian && for i in *_shlib; do j=`basename $$i _shlib`; \
+		ln -sf $$i $(serpack).$$j ; \
+		ln -sf $$i $(lampack).$$j ; \
+		ln -sf $$i $(openmpipack).$$j ; \
+		ln -sf $$i $(mpichpack).$$j ; \
+		done
+	sed "s/@VERSION@/$(version)/g" debian/shlibs.in > debian/$(serpack).shlibs
+	touch configure-stamp-debian
+
+configure-stamp-serial: configure-stamp-debian
+	dh_testdir
+	-mkdir debian/build-serial
+# configure serial version
+	cd debian/build-serial && CC=$(DEBCC) CXX=$(DEBCXX) \
+		../../configure $(CONFIGURE_FLAGS) \
+		--enable-cxx
+	touch configure-stamp-serial
+
+configure-stamp-lam: configure-stamp-debian
+	dh_testdir
+	-mkdir debian/build-lam
+# configure version with lam
+	cd debian/build-lam && CPPFLAGS=-I/usr/include/lam \
+		CC=mpicc.lam CXX=mpic++.lam RUNPARALLEL=/usr/bin/mpirun.lam \
+		../../configure $(CONFIGURE_FLAGS) \
+		--enable-parallel=yes
+	touch configure-stamp-lam
+
+configure-stamp-openmpi: configure-stamp-debian
+	dh_testdir
+	-mkdir debian/build-openmpi
+# configure version with lam
+	cd debian/build-openmpi && CPPFLAGS=-I/usr/lib/openmpi/include \
+		CC=mpicc.openmpi CXX=mpic++.openmpi RUNPARALLEL=/usr/bin/mpirun.openmpi \
+		../../configure $(CONFIGURE_FLAGS) \
+		--enable-parallel=yes
+	touch configure-stamp-openmpi
+
+configure-stamp-mpich: configure-stamp-debian
+	dh_testdir
+	-mkdir debian/build-mpich
+# configure version with mpich
+	cd debian/build-mpich && CPPFLAGS=-I/usr/lib/mpich/include/ \
+		LDFLAGS=-L/usr/lib/mpich/lib/ CC=mpicc.mpich \
+		CXX=mpiCC.mpich RUNPARALLEL=/usr/bin/mpirun.mpich \
+		../../configure $(CONFIGURE_FLAGS) \
+		--enable-parallel=yes
+	touch configure-stamp-mpich
+
+build: build-stamp-serial build-stamp-lam $(build_stamp_openmpi) build-stamp-mpich
+
+build-stamp-serial: configure-stamp-serial
+	dh_testdir
+	$(MAKE) -C debian/build-serial/
+	touch build-stamp-serial
+
+build-stamp-lam: configure-stamp-lam 
+	dh_testdir
+	$(MAKE) -C debian/build-lam/
+	touch build-stamp-lam
+
+build-stamp-openmpi: configure-stamp-openmpi 
+	dh_testdir
+	$(MAKE) -C debian/build-openmpi/
+	touch build-stamp-openmpi
+
+build-stamp-mpich: configure-stamp-mpich 
+	dh_testdir
+	$(MAKE) -C debian/build-mpich/
+	touch build-stamp-mpich
+
+clean:
+	test -f debian/control.in
+	dh_testroot
+	-rm -rf debian/build-serial
+	-rm -rf debian/build-lam
+	-rm -rf debian/build-openmpi
+	-rm -rf debian/build-mpich
+	-find debian -type l | xargs rm -f
+	grep -v ^\% debian/control.in | sed -e "s/@VERSION@/$(version)/g" -e "s/@ARCHS@/$(ARCHS)/" > debian/control
+	dh_clean configure-stamp* build-stamp* install-stamp* debian/*.shlibs
+
+install: install-serial install-lam $(install_openmpi) install-mpich install-doc
+
+install-serial: build-stamp-serial
+	dh_testdir
+	dh_testroot
+	-mkdir debian/build-serial/tmpinst
+	$(MAKE) -C debian/build-serial/ install prefix=$(CURDIR)/debian/build-serial/tmpinst/usr
+	dh_install -p$(serpack) -p$(package)-serial-dev -phdf5-tools \
+		--sourcedir=debian/build-serial/tmpinst
+
+install-lam: build-stamp-lam
+	dh_testdir
+	dh_testroot
+	-mkdir debian/build-lam/tmpinst
+	$(MAKE) -C debian/build-lam/ install prefix=$(CURDIR)/debian/build-lam/tmpinst/usr
+	dh_install -p$(lampack) -p$(package)-lam-dev \
+		--sourcedir=debian/build-lam/tmpinst
+
+install-openmpi: build-stamp-openmpi
+	dh_testdir
+	dh_testroot
+	-mkdir debian/build-openmpi/tmpinst
+	$(MAKE) -C debian/build-openmpi/ install prefix=$(CURDIR)/debian/build-openmpi/tmpinst/usr
+	dh_install -p$(openmpipack) -p$(package)-openmpi-dev \
+		--sourcedir=debian/build-openmpi/tmpinst
+
+install-mpich: build-stamp-mpich
+	dh_testdir
+	dh_testroot
+	-mkdir debian/build-mpich/tmpinst
+	$(MAKE) -C debian/build-mpich/ install prefix=$(CURDIR)/debian/build-mpich/tmpinst/usr
+	dh_install -p$(mpichpack) -p$(package)-mpich-dev \
+		--sourcedir=debian/build-mpich/tmpinst
+
+install-doc:
+	dh_testdir
+	dh_testroot
+#	dh_install -p$(package)-doc -X Dependencies -X Makefile.in -X CppUserNotes.doc
+
+binary-indep: install-doc
+	dh_testdir
+	dh_testroot
+#	dh_installdocs -i
+	dh_installchangelogs -i -k release_docs/RELEASE.txt
+	dh_compress -i
+	dh_fixperms -i
+	dh_installdeb -i
+	dh_gencontrol -i
+	dh_md5sums -i
+	dh_builddeb -i
+
+binary-arch: build install-serial install-lam $(install_openmpi) install-mpich
+	dh_testdir
+	dh_testroot 
+#	dh_installdocs $(ARCH_FLAG)
+#	dh_installman $(ARCH_FLAG)
+	dh_installchangelogs -a -k release_docs/RELEASE.txt
+	dh_link $(ARCH_FLAG)
+	dh_strip $(ARCH_FLAG)
+	dh_compress $(ARCH_FLAG)
+	dh_fixperms $(ARCH_FLAG)
+#	dh_makeshlibs -p$(serpack) -V "$(serpack) | $(virtpack)"
+	dh_makeshlibs -p$(lampack) -V $(lampack)
+ifeq ($(build_openmpi),yes)
+	dh_makeshlibs -p$(openmpipack) -V $(openmpipack)
+endif
+	dh_makeshlibs -p$(mpichpack) -V $(mpichpack)
+	dh_installdeb $(ARCH_FLAG)
+	dh_shlibdeps -phdf5-tools -L$(serpack) -ldebian/$(serpack)/usr/lib:debian/build-serial/test/.libs
+	dh_shlibdeps -p$(serpack) -L$(serpack) -ldebian/$(serpack)/usr/lib:debian/build-serial/test/.libs
+	dh_shlibdeps -p$(lampack) -L$(lampack) -ldebian/$(lampack)/usr/lib
+ifeq ($(build_openmpi),yes)
+	dh_shlibdeps -p$(openmpipack) -L$(openmpipack) -ldebian/$(openmpipack)/usr/lib
+endif
+	dh_shlibdeps -p$(mpichpack) -L$(mpichpack) -ldebian/$(mpichpack)/usr/lib
+	dh_gencontrol $(ARCH_FLAG)
+	dh_md5sums $(ARCH_FLAG)
+	dh_builddeb $(ARCH_FLAG)
+
+binary: binary-indep binary-arch
+
+.PHONY: build clean binary-indep binary-arch binary install configure install-serial install-doc install-lam install-openmpi install-mpich

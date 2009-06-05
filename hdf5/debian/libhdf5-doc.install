@@ -1,0 +1,3 @@
+doc/html /usr/share/doc/libhdf5-doc
+examples/*.c /usr/share/doc/libhdf5-doc/examples
+c++/examples/*.{cpp,h5,out} /usr/share/doc/libhdf5-doc/examples/c++

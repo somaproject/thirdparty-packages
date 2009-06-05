@@ -1,0 +1,12 @@
+libhdf5 for Debian
+------------------
+
+You can see what options hdf5 is compiled with in /usr/lib/libhdf5.settings
+(in one of the 3 development packages).
+
+You can now install several hdf5 versions simultaneously. The SONAME of
+the library is now changed automatically at every release. However, you
+will be unable to run software linked dynamically to libhdf5 on a
+non-Debian system unless you setup some compatibility symlinks.
+
+ -- Josselin Mouette <joss@debian.org> Mon, 21 Jul 2003 18:56:44 +0200
