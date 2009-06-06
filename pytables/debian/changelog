@@ -1,3 +1,9 @@
+pytables (2.1.1-2soma-ubuntu4) jaunty; urgency=low
+
+  * fixed hdf5 version problem
+
+ -- Stuart Layton <slayton@mit.edu>  Fri, 05 Jun 2009 21:11:12 -0400
+
 pytables (2.1.1-2soma-ubuntu2) jaunty; urgency=low
 
   * fixed dependencies
