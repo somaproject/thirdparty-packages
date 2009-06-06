@@ -28,7 +28,7 @@ Description: Hierarchical Data Format 5 (HDF5) - runtime files - serial version
 Package: libhdf5-serial-dev
 Section: libdevel
 Architecture: any
-Depends: libhdf5-serial-1.8.3-0 , libc6-dev, zlib1g-dev, libjpeg62-dev
+Depends: libhdf5-serial-1.8.3-0 (= ${binary:Version}), libc6-dev, zlib1g-dev, libjpeg62-dev
 Conflicts: libhdf5-dev
 Provides: libhdf5-dev
 Suggests: libhdf5-doc
@@ -59,7 +59,7 @@ Package: libhdf5-lam-dev
 Section: libdevel
 Priority: extra
 Architecture: any
-Depends: libhdf5-lam-1.8.3-0 , libc6-dev, zlib1g-dev, libjpeg62-dev, lam4-dev
+Depends: libhdf5-lam-1.8.3-0 (= ${binary:Version}), libc6-dev, zlib1g-dev, libjpeg62-dev, lam4-dev
 Conflicts: libhdf5-dev
 Provides: libhdf5-dev
 Suggests: libhdf5-doc
@@ -90,7 +90,7 @@ Package: libhdf5-openmpi-dev
 Section: libdevel
 Priority: extra
 Architecture: alpha amd64 i386 ia64 powerpc sparc kfreebsd-i386 kfreebsd-amd64
-Depends: libhdf5-openmpi-1.8.3-0 , libc6-dev, zlib1g-dev, libjpeg62-dev, libopenmpi-dev
+Depends: libhdf5-openmpi-1.8.3-0 (= ${binary:Version}), libc6-dev, zlib1g-dev, libjpeg62-dev, libopenmpi-dev
 Conflicts: libhdf5-dev
 Provides: libhdf5-dev
 Suggests: libhdf5-doc
@@ -122,7 +122,7 @@ Package: libhdf5-mpich-dev
 Section: libdevel
 Priority: extra
 Architecture: any
-Depends: libhdf5-mpich-1.8.3-0 , libc6-dev, zlib1g-dev, libjpeg62-dev, libmpich1.0-dev
+Depends: libhdf5-mpich-1.8.3-0 (= ${binary:Version}), libc6-dev, zlib1g-dev, libjpeg62-dev, libmpich1.0-dev
 Conflicts: libhdf5-dev
 Provides: libhdf5-dev
 Suggests: libhdf5-doc

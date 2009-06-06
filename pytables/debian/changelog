@@ -1,3 +1,21 @@
+pytables (2.1.1-2soma-ubuntu7) jaunty; urgency=low
+
+  * one last try at getting pytables to build with hdf5
+
+ -- Stuart Layton <slayton@mit.edu>  Sat, 06 Jun 2009 10:07:08 -0400
+
+pytables (2.1.1-2soma-ubuntu6) jaunty; urgency=low
+
+  * fixed offending lines in the debian/rules file, shlibs is not run
+
+ -- Stuart Layton <slayton@mit.edu>  Sat, 06 Jun 2009 09:27:28 -0400
+
+pytables (2.1.1-2soma-ubuntu5) jaunty; urgency=low
+
+  * updated depends
+
+ -- Stuart Layton <slayton@mit.edu>  Sat, 06 Jun 2009 08:25:26 -0400
+
 pytables (2.1.1-2soma-ubuntu4) jaunty; urgency=low
 
   * fixed hdf5 version problem

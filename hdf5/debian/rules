@@ -78,7 +78,7 @@ export LAMMPICXX=$(DEBCXX)
 CONFIGURE_FLAGS = --prefix=/usr --host=$(DEB_HOST_GNU_TYPE) \
 		  --build=$(DEB_BUILD_GNU_TYPE) \
 		  --mandir=\$${prefix}/share/man \
-		  --with-pthread  --enable-linux-lfs \
+		  --with-pthread --enable-linux-lfs \
 		  --enable-shared --enable-production=$(USE_PROD)
 
 
@@ -228,14 +228,14 @@ binary-arch: build install-serial install-lam $(install_openmpi) install-mpich
 	dh_testdir
 	dh_testroot 
 #	dh_installdocs $(ARCH_FLAG)
-#	dh_installman $(ARCH_FLAG)
+	dh_installman $(ARCH_FLAG)
 	dh_installchangelogs -a -k release_docs/RELEASE.txt
 	dh_link $(ARCH_FLAG)
 	dh_strip $(ARCH_FLAG)
 	dh_compress $(ARCH_FLAG)
 	dh_fixperms $(ARCH_FLAG)
-#	dh_makeshlibs -p$(serpack) -V "$(serpack) | $(virtpack)"
-	dh_makeshlibs -p$(lampack) -V $(lampack)
+	dh_makeshlibs -p$(serpack) -V "$(serpack) | $(virtpack)"
+#	dh_makeshlibs -p$(lampack) -V $(lampack)
 ifeq ($(build_openmpi),yes)
 	dh_makeshlibs -p$(openmpipack) -V $(openmpipack)
 endif

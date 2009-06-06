@@ -14,7 +14,7 @@ Package: python-tables
 Section: python
 Architecture: any
 XB-Python-Version: ${python:Versions}
-Depends: ${python:Depends}, ${shlibs:Depends}, python-numpy
+Depends: ${python:Depends}, python-numpy, libhdf5-serial (>=1.8.2)
 Recommends: ${shlibs:Recommends}
 Suggests: python-tables-doc, python-netcdf, ${shlibs:Suggests}
 Description: hierarchical database for Python based on HDF5

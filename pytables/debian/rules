@@ -76,11 +76,11 @@ binary-arch: build install
 	#dh_shlibdeps -a
 	# In order to automatically add the Depends, Recommends & Suggests
 	# fields automatically.
-	dh_shlibdeps -ppython-tables -X _comp_ -- \
-	    -dRecommends \
-	      debian/python-tables/usr/lib/python*/site-packages/tables/_comp_bzip2.so \
-	      debian/python-tables/usr/lib/python*/site-packages/tables/_comp_lzo.so \
-	    -dDepends
+#	dh_shlibdeps -ppython-tables -X _comp_ -- \
+#	    -dRecommends \
+#	      debian/python-tables/usr/lib/python*/site-packages/tables/_comp_bzip2.so \
+#	      debian/python-tables/usr/lib/python*/site-packages/tables/_comp_lzo.so \
+#	    -dDepends
 #	    -dSuggests \
 #	      debian/python-tables/usr/lib/python*/site-packages/tables/_comp_ucl.so \
 
