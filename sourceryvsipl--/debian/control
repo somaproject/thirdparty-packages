@@ -1,0 +1,15 @@
+Source: sourceryvsipl++
+Section: unknown
+Priority: extra
+Maintainer: Stuart Layton <slayton@mit.edu>
+Build-Depends: debhelper (>= 5), autotools-dev
+Standards-Version: 3.7.2
+
+Package: sourceryvsipl++
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: VSPL++ is a toolkit for signal and image processing.
+ Sourcery VSPL++ is a toolkit for developing high-performance signal- 
+ and image-processing applications. Sourcery VSIPL++ is an implementation 
+ of the open-standard VSIPL++ API, providing routines for FFTs, FIR filters, 
+ QR decomposition, and linear algebra.  
