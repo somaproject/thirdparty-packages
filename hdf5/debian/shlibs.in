@@ -1,0 +1,4 @@
+libhdf5_cpp-@VERSION@ 0 libhdf5-serial-@VERSION@
+libhdf5-@VERSION@ 0 libhdf5-serial-@VERSION@ | libhdf5-@VERSION@
+libh5test-@VERSION@ 0 libhdf5-serial-@VERSION@ | libhdf5-@VERSION@
+libhdf5_hl-@VERSION@ 0 libhdf5-serial-@VERSION@ | libhdf5-@VERSION@

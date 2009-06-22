@@ -1,0 +1,5 @@
+usr/include
+usr/lib/libhdf5*.so
+usr/lib/libhdf5*.settings
+usr/lib/libhdf5*.la
+usr/lib/libhdf5*.a

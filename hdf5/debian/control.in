@@ -11,12 +11,12 @@ Homepage: http://hdfgroup.org/HDF5/
 Vcs-Browser: http://svn.debian.org/viewsvn/pkg-grass/packages/hdf5/trunk/
 Vcs-Svn: svn://svn.debian.org/svn/pkg-grass/packages/hdf5/trunk
 
-Package: libhdf5-serial-1.8.3
+Package: libhdf5-serial-@VERSION@
 Section: libs
 Architecture: any
 Depends: ${shlibs:Depends}
-Conflicts: libhdf5-1.8.3
-Provides: libhdf5-1.8.3
+Conflicts: libhdf5-@VERSION@
+Provides: libhdf5-@VERSION@
 Description: Hierarchical Data Format 5 (HDF5) - runtime files - serial version
  HDF5 is a file format and library for storing scientific data. 
  HDF5 was designed and implemented to address the deficiencies of
@@ -28,7 +28,7 @@ Description: Hierarchical Data Format 5 (HDF5) - runtime files - serial version
 Package: libhdf5-serial-dev
 Section: libdevel
 Architecture: any
-Depends: libhdf5-serial-1.8.3 (= ${binary:Version}), zlib1g-dev, libjpeg62-dev
+Depends: libhdf5-serial-@VERSION@ (= ${binary:Version}), zlib1g-dev, libjpeg62-dev
 Conflicts: libhdf5-dev
 Provides: libhdf5-dev
 Suggests: libhdf5-doc
@@ -40,13 +40,13 @@ Description: Hierarchical Data Format 5 (HDF5) - development files - serial vers
  .
  This package contains development files for serial platforms.
 
-Package: libhdf5-lam-1.8.3
+Package: libhdf5-lam-@VERSION@
 Section: libs
 Priority: extra
 Architecture: any
 Depends: ${shlibs:Depends}
-Conflicts: libhdf5-1.8.3
-Provides: libhdf5-1.8.3
+Conflicts: libhdf5-@VERSION@
+Provides: libhdf5-@VERSION@
 Description: Hierarchical Data Format 5 (HDF5) - runtime files - LAM version
  HDF5 is a file format and library for storing scientific data. 
  HDF5 was designed and implemented to address the deficiencies of
@@ -59,7 +59,7 @@ Package: libhdf5-lam-dev
 Section: libdevel
 Priority: extra
 Architecture: any
-Depends: libhdf5-lam-1.8.3 (= ${binary:Version}), zlib1g-dev, libjpeg62-dev, lam4-dev
+Depends: libhdf5-lam-@VERSION@ (= ${binary:Version}), zlib1g-dev, libjpeg62-dev, lam4-dev
 Conflicts: libhdf5-dev
 Provides: libhdf5-dev
 Suggests: libhdf5-doc
@@ -71,13 +71,13 @@ Description: Hierarchical Data Format 5 (HDF5) - development files - LAM version
  .
  This package contains development files for use with LAM.
 
-Package: libhdf5-openmpi-1.8.3
+Package: libhdf5-openmpi-@VERSION@
 Section: libs
 Priority: extra
-Architecture: alpha amd64 i386 ia64 powerpc sparc kfreebsd-i386 kfreebsd-amd64
+Architecture: @ARCHS@
 Depends: ${shlibs:Depends}
-Conflicts: libhdf5-1.8.3
-Provides: libhdf5-1.8.3
+Conflicts: libhdf5-@VERSION@
+Provides: libhdf5-@VERSION@
 Description: Hierarchical Data Format 5 (HDF5) - runtime files - OpenMPI version
  HDF5 is a file format and library for storing scientific data. 
  HDF5 was designed and implemented to address the deficiencies of
@@ -89,8 +89,8 @@ Description: Hierarchical Data Format 5 (HDF5) - runtime files - OpenMPI version
 Package: libhdf5-openmpi-dev
 Section: libdevel
 Priority: extra
-Architecture: alpha amd64 i386 ia64 powerpc sparc kfreebsd-i386 kfreebsd-amd64
-Depends: libhdf5-openmpi-1.8.3 (= ${binary:Version}), zlib1g-dev, libjpeg62-dev, libopenmpi-dev
+Architecture: @ARCHS@
+Depends: libhdf5-openmpi-@VERSION@ (= ${binary:Version}), zlib1g-dev, libjpeg62-dev, libopenmpi-dev
 Conflicts: libhdf5-dev
 Provides: libhdf5-dev
 Suggests: libhdf5-doc
@@ -102,13 +102,13 @@ Description: Hierarchical Data Format 5 (HDF5) - development files - OpenMPI ver
  .
  This package contains development files for use with OpenMPI.
 
-Package: libhdf5-mpich-1.8.3
+Package: libhdf5-mpich-@VERSION@
 Section: libs
 Priority: extra
 Architecture: any
 Depends: ${shlibs:Depends}
-Conflicts: libhdf5-1.8.3
-Provides: libhdf5-1.8.3
+Conflicts: libhdf5-@VERSION@
+Provides: libhdf5-@VERSION@
 Description: Hierarchical Data Format 5 (HDF5) - runtime files - MPICH version
  HDF5 is a file format and library for storing scientific data. 
  HDF5 was designed and implemented to address the deficiencies of
@@ -122,7 +122,7 @@ Package: libhdf5-mpich-dev
 Section: libdevel
 Priority: extra
 Architecture: any
-Depends: libhdf5-mpich-1.8.3 (= ${binary:Version}), zlib1g-dev, libjpeg62-dev, libmpich1.0-dev
+Depends: libhdf5-mpich-@VERSION@ (= ${binary:Version}), zlib1g-dev, libjpeg62-dev, libmpich1.0-dev
 Conflicts: libhdf5-dev
 Provides: libhdf5-dev
 Suggests: libhdf5-doc

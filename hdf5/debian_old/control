@@ -1,0 +1,48 @@
+Source: hdf5
+Priority: extra
+Maintainer: Stuart Layton <slayton@mit.edu>
+Build-Depends: debhelper (>= 7), autotools-dev, cdbs,  zlib1g-dev, libjpeg62-dev, sed (>=4.1.5)
+Standards-Version: 3.8.0
+Section: libs
+Homepage: http://hdf.ncsa.uiuc.edu/HDF5/
+
+
+Package: libhdf5-serial-dev
+Section: libdevel
+Architecture: any
+Depends: libhdf5-serial, ${misc:Depends}
+Description: Hierarchical Data Format 5 (HDF5) - development files - serial version
+ HDF5 is a file format and library for storing scientific data.
+ HDF5 was designed and implemented to address the deficiencies of
+ HDF4.x. It has a more powerful and flexible data model, supports
+ files larger than 2 GB, and supports parallel I/O.
+ .
+ This package contains runtime files for serial platforms.
+
+
+Package: libhdf5-serial
+Section: libs
+Architecture: any
+Provides: libhdf5
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Hierarchical Data Format 5 (HDF5) - runtime files - serial version
+ HDF5 is a file format and library for storing scientific data.
+ HDF5 was designed and implemented to address the deficiencies of
+ HDF4.x. It has a more powerful and flexible data model, supports
+ files larger than 2 GB, and supports parallel I/O.
+ .
+ This package contains runtime files for serial platforms.
+ 
+Package: hdf5-tools
+Section: science
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Hierarchical Data Format 5 (HDF5) - Runtime tools
+ HDF5 is a file format and library for storing scientific data.
+ HDF5 was designed and implemented to address the deficiencies of
+ HDF4.x. It has a more powerful and flexible data model, supports
+ files larger than 2 GB, and supports parallel I/O.
+ .
+ This package contains runtime tools for HDF5.
+
+
