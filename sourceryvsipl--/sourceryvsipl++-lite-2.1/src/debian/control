@@ -6,15 +6,6 @@ Standards-Version: 3.8.0
 Section: libs
 Homepage: http://www.CodeSourcery.com
 
-
-Package: libsourceryvsipl-dev
-Section: libdevel
-Architecture: any
-Depends: libsourceryvsipl, ${misc:Depends}
-Description: Development Library and Headers
- Long description needed
-
-
 Package: libsourceryvsipl
 Section: libs
 Architecture: any
