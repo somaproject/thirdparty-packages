@@ -1,0 +1,76 @@
+########################################################################
+#
+# File:   share/sourceryvsipl++/Makefile
+# Author: Don McCoy
+# Date:   2006-01-18
+#
+# Contents: Makefile for VSIPL++ example programs.
+#
+########################################################################
+
+########################################################################
+# Variables
+########################################################################
+
+# This should point to the directory where Sourcery VSIPL++ is installed.
+prefix = @prefix@
+
+
+# This selects the desired library, which will vary depending on the
+# platform.  Please see the Getting Started manual for a complete list 
+# of suffixes appropriate for your system.
+#
+# You may also set it on the command line when invoking make.  For example:
+#
+#   $ make suffix=-em64t-ser-builtin
+#
+# would select the x86 64-bit serial-builtin configuration listed in the 
+# pkgconfig/ directory as vsipl-em64t-ser-builtin.pc.  Note the leading dash.
+#
+suffix = 
+
+pkgcommand := PKG_CONFIG_PATH=$(prefix)/lib/pkgconfig 	\
+                     pkg-config vsipl++$(suffix) 	\
+                     --define-variable=prefix=$(prefix)
+
+CXX      = $(shell ${pkgcommand} --variable=cxx)
+CXXFLAGS = $(shell ${pkgcommand} --cflags) \
+	   $(shell ${pkgcommand} --variable=cxxflags)
+LIBS     = $(shell ${pkgcommand} --libs)
+ 
+
+########################################################################
+# Rules
+########################################################################
+
+all: example1 fft fconv vmul
+
+example1: example1.o
+	$(CXX) -o $@ $^ $(LIBS)
+
+fft: fft.o
+	$(CXX) -o $@ $^ $(LIBS)
+
+fft.o: fft.cpp
+	$(CXX) $(CXXFLAGS) -DVSIP_IMPL_PROFILER=15 -c -o $@ $^
+
+fconv: fconv.o
+	$(CXX) -o $@ $^ $(LIBS)
+
+vmul: vmul.o
+	$(CXX) -o $@ $^ $(LIBS)
+
+extdata: extdata.o
+	$(CXX) -o $@ $^ $(LIBS)
+
+mprod: mprod.o
+	$(CXX) -o $@ $^ $(LIBS)
+
+png: png.o
+	$(CXX) -o $@ $^ $(LIBS)
+
+sobel: sobel.o
+	$(CXX) -o $@ $^ $(LIBS)
+
+stencil: stencil.o
+	$(CXX) -o $@ $^ $(LIBS)

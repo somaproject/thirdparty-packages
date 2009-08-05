@@ -1,0 +1,747 @@
+########################################################################
+#
+# File:   GNUmakefile
+# Author: Mark Mitchell 
+# Date:   2005-01-20
+#
+# Contents: Makefile for VSIPL++
+#
+########################################################################
+
+########################################################################
+# Make Configuration
+########################################################################
+
+# Remove the thing being generated if something goes wrong while
+# building it.
+.DELETE_ON_ERROR:
+
+# First, so that it is the default target, even if included
+# subdirectory makefiles define targets of their own.
+all::
+
+########################################################################
+# Configuration Variables
+########################################################################
+
+# Variables in this section can be set by the user on the command line.
+
+srcdir := @srcdir@
+abs_srcdir := @abs_srcdir@
+host:=@host@
+
+enable_csl_documentation := @enable_csl_documentation@
+enable_scripting := @enable_scripting@
+enable_cvsip_bindings  := @enable_cvsip_bindings@
+
+CBE_SDK_SYSROOT := @cbe_sdk_sysroot@
+
+### Installation ###
+
+PACKAGE_TARNAME := @PACKAGE_TARNAME@
+INSTALL := @INSTALL@
+INSTALL_DATA := @INSTALL_DATA@
+INSTALL_SCRIPT := @INSTALL_SCRIPT@
+INSTALL_PROGRAM := @INSTALL_PROGRAM@
+distname:= $(PACKAGE_TARNAME)
+distfiles:= $(wildcard $(srcdir)/*)
+
+# Order matters for the various directory variables, as autoconf makes some
+# of the variables depend on the values of others.
+prefix := @prefix@
+exec_prefix := @exec_prefix@
+datarootdir := @datarootdir@
+datadir := @datadir@
+includedir := @includedir@
+libdir := @libdir@
+builtin_libdir := @builtin_libdir@
+sbindir := @sbindir@
+bindir := @bindir@
+benchmarks_exec_prefix := $(exec_prefix)
+# The directory for putting data that is specific to this package.
+# This is not a standard variable name.
+pkgdatadir := $(datadir)/$(PACKAGE_TARNAME)
+cygwin_mount :=@cygwin_mount@
+
+# Documentation directories.  According to the GNU Coding Standards,
+# Autoconf has @...@ variables for some of these, but Autoconf 2.59,
+# installed on CodeSourcery's sytems, does not, so we set these by
+# hand, using the defaults specified in the GNU Coding Standards.
+datarootdir := $(prefix)/share
+docdir := $(datarootdir)/doc/$(PACKAGE_TARNAME)
+htmldir := $(docdir)
+pdfdir := $(docdir)
+
+suffix := @suffix@
+packagesuffix :=
+
+### Compilation ###
+
+# Are we using the intel-win toolchain ?
+INTEL_WIN := @INTEL_WIN@
+# The path to the archiver. 
+AR := @AR@
+# The path to the C compiler.
+CC := @CC@
+# C preprocessor flags.
+CPPFLAGS := @CPPFLAGS@
+# The path to the C compiler.
+CC := @CC@
+# The path to the C++ compiler.
+CXX := @CXX@
+# The dependency generator.
+CCDEP := @CCDEP@
+# The dependency generator.
+CXXDEP := @CXXDEP@
+# The DSO linker.
+LDSHARED:= @LDSHARED@
+# The strip executable.
+STRIP:= @STRIP@
+# C include directories.
+CINCLUDES := -I $(srcdir)/cvsip
+# C++ include directories.
+CXXINCLUDES := -I src -I $(srcdir)/src
+# C macro definitions.
+CDEFS :=
+# C++ macro definitions.
+CXXDEFS :=
+# C preprocessor flags.
+CCPPFLAGS := $(CINCLUDES) $(CDEFS) $(CPPFLAGS)
+# C++ preprocessor flags.
+CXXCPPFLAGS := $(CXXINCLUDES) $(CXXDEFS) $(CPPFLAGS)
+# C compilation flags.
+CFLAGS := $(CCPPFLAGS) @CFLAGS@ @CFLAGS_LIB@
+# C++ compilation flags.
+CXXFLAGS := $(CXXCPPFLAGS) @CXXFLAGS@ @CXXFLAGS_LIB@
+# The extension for executable programs.
+EXEEXT := @EXEEXT@
+# Linker flags.
+LDFLAGS := @LDFLAGS@ -L$(builtin_libdir)
+# Libraries to link to.
+LIBS := @LIBS@
+# The extension for object files.
+OBJEXT := @OBJEXT@
+# The extension for archives.
+LIBEXT := @LIBEXT@
+# The Python interpreter.
+PYTHON	:= @PYTHON@
+# The extension for python extension modules.
+PYTHON_EXT := @PYTHON_EXT@
+# The QMTest command to use for testing.
+QMTEST := @QMTEST@
+# Are we building a shared library (1: yes, undef: no)?
+BUILD_SHARED_LIBS := @BUILD_SHARED_LIBS@
+
+### Third-party package availability ###
+
+VSIP_IMPL_REF_IMPL := @VSIP_IMPL_REF_IMPL@
+VSIP_IMPL_HAVE_CUDA := @VSIP_IMPL_HAVE_CUDA@
+VSIP_IMPL_HAVE_IPP := @VSIP_IMPL_HAVE_IPP@
+VSIP_IMPL_HAVE_SAL := @VSIP_IMPL_HAVE_SAL@
+VSIP_IMPL_HAVE_BLAS := @VSIP_IMPL_HAVE_BLAS@
+VSIP_IMPL_HAVE_LAPACK := @VSIP_IMPL_HAVE_LAPACK@
+VSIP_IMPL_HAVE_MPI := @VSIP_IMPL_HAVE_MPI@
+VSIP_IMPL_HAVE_CVSIP := @VSIP_IMPL_HAVE_CVSIP@
+VSIP_IMPL_HAVE_CBE_SDK := @VSIP_IMPL_HAVE_CBE_SDK@
+VSIP_IMPL_HAVE_HUGE_PAGE_POOL := @VSIP_IMPL_HAVE_HUGE_PAGE_POOL@
+VSIP_IMPL_SAL_FFT := @VSIP_IMPL_SAL_FFT@
+VSIP_IMPL_IPP_FFT := @VSIP_IMPL_IPP_FFT@
+VSIP_IMPL_FFTW3 := @VSIP_IMPL_FFTW3@
+VSIP_IMPL_CBE_SDK_FFT := @VSIP_IMPL_CBE_SDK_FFT@
+VSIP_IMPL_CVSIP_FFT := @VSIP_IMPL_CVSIP_FFT@
+VSIP_IMPL_CUDA_FFT := @VSIP_IMPL_CUDA_FFT@
+VSIP_IMPL_HAVE_NUMA := @VSIP_IMPL_HAVE_NUMA@
+
+### Documentation ### 
+
+# The location of the csl-docbook directory.
+csldocbookdir := @csl_docbook_prefix@
+
+# Our source distributions contain pre-built versions of the
+# documentation; the build process will copy the pre-built versions if
+# the following tools are not available.
+
+# The Doxygen command.
+DOXYGEN := 
+# The Synopsis command.
+SYNOPSIS := @SYNOPSIS@
+# The command used to turn DocBook into TeX.
+JADE := 
+# The command used to turn TeX output by Jade into PDF.
+PDFJADETEX := 
+# The command used to turn XSL-FO into PDF.
+XEP := @XEP@
+# The command used to turn DocBook into HTML or XSL-FO.
+XSLTPROC := @XSLTPROC@
+# The location of the catalog pointing to the Docbook XML files.
+XML_CATALOG_FILES := @XML_CATALOG_FILES@
+ifdef XML_CATALOG_FILES
+export XML_CATALOG_FILES
+endif
+
+########################################################################
+# Build instructions
+########################################################################
+
+# For the intel-win toolchain use special build instructions.
+ifdef INTEL_WIN
+
+define make_dep
+@echo generating dependencies for $(@D)/$(<F)
+# Using icl /QM generates invalid makefile dependencies since ':' and ' '
+# are unquoted in file paths.
+#$(SHELL) -ec '$(CXX) /QM /nologo $(CXXFLAGS) \
+#	      $(call dir_var,$(dir $<),CXXFLAGS) $< \
+#	      | sed "s|$(*F)\\.$(OBJEXT)[ :]*|$*\\.d $*\\.$(OBJEXT) : |g" > $@'
+touch $@
+endef
+
+define ccompile
+@echo compiling $(@D)/$(@F)
+$(CC) /nologo /c $(CFLAGS) $(call dir_var,$(dir $<),CFLAGS) /Fo$@ $<
+endef
+
+define compile
+@echo compiling $(@D)/$(@F)
+$(CXX) /nologo /c $(CXXFLAGS) $(call dir_var,$(dir $<),CXXFLAGS) /Fo$@ $<
+endef
+
+define archive
+@echo archiving $@
+xilib /nologo /out:$@ $^ || rm -f $@
+endef
+
+# Used for linking a shared object for python (see scripting/GNUmakefile.inc)
+define link_dso
+@echo linking $@
+$(CXX) /nologo /LD -o $@ $^ \
+  $(subst -L,/libpath:, $(call dir_var,$(dir $<),LDFLAGS))) \
+  $(patsubst -l%,lib%.lib, $(subst -L,/libpath:, \
+    $(call dir_var,$(dir $<),LIBS) $(LIBS)))
+endef
+
+# Used for linking a shared libsvpp.so and libvsip_csl.so libraries.
+define link_lib_dso
+@echo linking $@
+$(CXX) /nologo /LD -o $@ $^ \
+  $(subst -L,/libpath:, $(call dir_var,$(dir $<),LDFLAGS))) \
+  $(patsubst -l%,lib%.lib, $(subst -L,/libpath:, \
+    $(call dir_var,$(dir $<),LIBS) ))
+endef
+
+define link_benchmark
+@echo linking $@
+xilink /nologo /out:$@ $< benchmarks/main.$(OBJEXT) /libpath:lib libsvpp.lib \
+  $(subst -L,/libpath:, $(call dir_var,$(dir $<),LDFLAGS)) \
+  $(patsubst -l%,lib%.lib, \
+    $(subst -L,/libpath:, $(call dir_var,$(dir $<),LIBS) $(LIBS)))
+endef
+
+define link_app
+@echo linking $@
+xilink /nologo /out:$@ $^ /libpath:lib libsvpp.lib \
+  $(subst -L,/libpath:, $(call dir_var,$(dir $<),LDFLAGS)) \
+  $(patsubst -l%,lib%.lib, \
+    $(subst -L,/libpath:, $(call dir_var,$(dir $<),LIBS) $(LIBS)))
+endef
+
+define link_csl_app
+@echo linking $@
+xilink /nologo /out:$@ $^ /libpath:lib libvsip_csl.lib libsvpp.lib \
+  $(subst -L,/libpath:, $(call dir_var,$(dir $<),LDFLAGS)) \
+  $(patsubst -l%,lib%.lib, \
+    $(subst -L,/libpath:, $(call dir_var,$(dir $<),LIBS) $(LIBS)))
+endef
+
+define link_cvsip_app
+@echo linking $@
+xilink /nologo /out:$@ $^ /libpath:lib libsvsip.lib libvsip_csl.lib libsvpp.lib \
+  $(subst -L,/libpath:, $(call dir_var,$(dir $<),LDFLAGS)) \
+  $(patsubst -l%,lib%.lib, \
+    $(subst -L,/libpath:, $(call dir_var,$(dir $<),LIBS) $(LIBS)))
+endef
+
+else # not intel-win
+
+# Generate dependencies (This recipe is modified from the GNU Make manual.)
+#  - The first sed converts .o files to .$(OBJEXT).  This is a work
+#    around for MCOE/GreenHills which uses .o for dependencies but
+#    .oppc for actual files.  It is a no-op if OBJEXT == .o .
+define make_cvsip_dep
+@echo generating dependencies for $(@D)/$(<F)
+$(SHELL) -ec '$(CCDEP) $(CFLAGS) \
+	      $(call dir_var,$(dir $<),CFLAGS) $< \
+	      | sed "s|$(*F)\\.o[ :]*|$*\\.$(OBJEXT) : |g" \
+	      | sed "s|$(*F)\\.$(OBJEXT)[ :]*|$*\\.d $*\\.$(OBJEXT) : |g" > $@'
+endef
+
+define make_dep
+@echo generating dependencies for $(@D)/$(<F)
+$(SHELL) -ec '$(CXXDEP) $(CXXFLAGS) \
+	      $(call dir_var,$(dir $<),CXXFLAGS) $< \
+	      | sed "s|$(*F)\\.o[ :]*|$*\\.$(OBJEXT) : |g" \
+	      | sed "s|$(*F)\\.$(OBJEXT)[ :]*|$*\\.d $*\\.$(OBJEXT) : |g" > $@'
+endef
+
+define ccompile
+@echo compiling $(@D)/$(@F)
+$(CC) -c $(CFLAGS) $(call dir_var,$(dir $<),CFLAGS) -o $@ $<
+endef
+
+define compile
+@echo compiling $(@D)/$(@F)
+$(CXX) -c $(CXXFLAGS) $(call dir_var,$(dir $<),CXXFLAGS) -o $@ $<
+endef
+
+define archive
+@echo archiving $@
+$(AR) rc $@ $^ || rm -f $@
+endef
+
+# Used for linking a shared object for python (see scripting/GNUmakefile.inc)
+define link_dso
+@echo linking $@
+$(LDSHARED) $(LDFLAGS) $(call dir_var,$(dir $<),LDFLAGS) -o $@ $^ \
+  $(call dir_var,$(dir $<),LIBS) $(LIBS)
+  strip --strip-unneeded $@
+endef
+
+# Used for linking a shared libsvpp.so and libvsip_csl.so libraries.
+define link_lib_dso
+@echo linking $@
+$(LDSHARED) $(LDFLAGS) $(call dir_var,$(dir $<),LDFLAGS) -o $@ $^ \
+  $(call dir_var,$(dir $<),LIBS)
+  strip --strip-unneeded $@
+endef
+
+# Used for building benchmarks.  By manually giving '-Llib -lsvpp'
+# arguments to $(CXX) instead of using $^, this macro avoids creating
+# a shared library reference to "lib/libsvpp.so."
+define link_benchmark
+@echo linking $@
+$(CXX) $(LDFLAGS) $(call dir_var,$(dir $<),LDFLAGS) -o $@ $< \
+  benchmarks/main.$(OBJEXT) -Llib -lsvpp \
+  $(call dir_var,$(dir $<),LIBS) $(LIBS)
+endef
+
+define link_app
+@echo linking $@
+$(CXX) $(LDFLAGS) $(call dir_var,$(dir $<),LDFLAGS) -o $@ $^ \
+  $(call dir_var,$(dir $<),LIBS) $(LIBS)
+endef
+
+define link_csl_app
+@echo linking $@
+$(CXX) $(LDFLAGS) $(call dir_var,$(dir $<),LDFLAGS) -o $@ $^ \
+  $(call dir_var,$(dir $<),LIBS) $(LIBS)
+endef
+
+define link_cvsip_app
+@echo linking $@
+$(CXX) $(LDFLAGS) $(call dir_var,$(dir $<),LDFLAGS) -o $@ $^ \
+  -Llib -lsvsip -lvsip_csl -lsvpp $(call dir_var,$(dir $<),LIBS) $(LIBS)
+endef
+
+endif
+
+########################################################################
+# Subdirectory Variables
+########################################################################
+
+# Variables in this section may be appended to (with +=) by
+# subdirectory Makefile fragments.
+
+# C++ source files, relative to $srcdir.
+cxx_sources :=
+# C source files, relative to $srcdir.
+c_sources :=
+# Libraries required to link, relative to $objdir.
+# (Examples: libsvpp.a, etc)
+libs :=
+# Libraries not required to link, relative to $objdir.
+# (Examples: svpp_kernels.so)
+other_libs :=
+# PDF documentation, relative to $objdir.
+pdf_manuals :=
+# HTML documentation, relative to $objdir.  
+html_manuals :=
+
+# The subdirectories in which we can find sub-Makefiles.  The "tests"
+# "examples", "benchmarks", and "benchmarks/hpec_kernel" directories
+# must be last because some of their targets depend on $(libs), and
+# $(libs) will not be full initialized until all other subdirectories
+# have been processed.
+subdirs := \
+	apps \
+	apps/utils \
+	doc \
+	scripts \
+	src \
+	src/vsip \
+	src/vsip_csl \
+	tools \
+	vendor \
+	benchmarks \
+	benchmarks/hpec_kernel \
+	tests \
+	examples
+
+ifeq ($(enable_scripting),1)
+subdirs += scripting
+endif
+ifeq ($(enable_cvsip_bindings),1)
+subdirs += cvsip examples/cvsip benchmarks/cvsip
+endif
+
+########################################################################
+# Internal Variables
+########################################################################
+
+# Variables in this section should not be modified.
+
+vpath %.c   $(srcdir)
+vpath %.cpp $(srcdir)
+vpath %.hpp $(srcdir)
+vpath %.xml $(srcdir)
+
+# The following two variables must be evaluated lazily since at this point
+# $(cxx_sources) and $(c_sources) are not completely defined.
+objects  = $(patsubst $(srcdir)/%.cpp, %.$(OBJEXT), $(cxx_sources)) \
+           $(patsubst $(srcdir)/%.c, %.$(OBJEXT), $(c_sources))
+deps     = $(patsubst $(srcdir)/%.cpp, %.d, $(cxx_sources))
+deps    += $(patsubst $(srcdir)/%.c, %.d, $(c_sources))
+
+hdr	:= $(patsubst $(srcdir)/src/%, %, \
+             $(wildcard $(srcdir)/src/vsip/*.hpp))
+hdr	+= $(patsubst $(srcdir)/src/%, %, \
+             $(wildcard $(srcdir)/src/vsip/core/*.hpp))
+hdr	+= $(patsubst $(srcdir)/src/%, %, \
+             $(wildcard $(srcdir)/src/vsip/core/expr/*.hpp))
+hdr	+= $(patsubst $(srcdir)/src/%, %, \
+             $(wildcard $(srcdir)/src/vsip/core/fft/*.hpp))
+hdr	+= $(patsubst $(srcdir)/src/%, %, \
+             $(wildcard $(srcdir)/src/vsip/core/cvsip/*.hpp))
+hdr	+= $(patsubst $(srcdir)/src/%, %, \
+             $(wildcard $(srcdir)/src/vsip/core/mpi/*.hpp))
+hdr	+= $(patsubst $(srcdir)/src/%, %, \
+             $(wildcard $(srcdir)/src/vsip/core/parallel/*.hpp))
+hdr	+= $(patsubst $(srcdir)/src/%, %, \
+             $(wildcard $(srcdir)/src/vsip/core/reductions/*.hpp))
+hdr	+= $(patsubst $(srcdir)/src/%, %, \
+             $(wildcard $(srcdir)/src/vsip/core/signal/*.hpp))
+hdr	+= $(patsubst $(srcdir)/src/%, %, \
+             $(wildcard $(srcdir)/src/vsip/core/solver/*.hpp))
+ifndef VSIP_IMPL_REF_IMPL
+hdr	+= $(patsubst $(srcdir)/src/%, %, \
+             $(wildcard $(srcdir)/src/vsip/opt/*.hpp))
+hdr	+= $(patsubst $(srcdir)/src/%, %, \
+             $(wildcard $(srcdir)/src/vsip/opt/cuda/*.hpp))
+hdr	+= $(patsubst $(srcdir)/src/%, %, \
+             $(wildcard $(srcdir)/src/vsip/opt/diag/*.hpp))
+hdr	+= $(patsubst $(srcdir)/src/%, %, \
+             $(wildcard $(srcdir)/src/vsip/opt/expr/*.hpp))
+hdr	+= $(patsubst $(srcdir)/src/%, %, \
+             $(wildcard $(srcdir)/src/vsip/opt/fft/*.hpp))
+hdr	+= $(patsubst $(srcdir)/src/%, %, \
+             $(wildcard $(srcdir)/src/vsip/opt/fftw3/*.hpp))
+hdr	+= $(patsubst $(srcdir)/src/%, %, \
+             $(wildcard $(srcdir)/src/vsip/opt/ipp/*.hpp))
+hdr	+= $(patsubst $(srcdir)/src/%, %, \
+             $(wildcard $(srcdir)/src/vsip/opt/lapack/*.hpp))
+hdr	+= $(patsubst $(srcdir)/src/%, %, \
+             $(wildcard $(srcdir)/src/vsip/opt/parallel/*.hpp))
+hdr	+= $(patsubst $(srcdir)/src/%, %, \
+             $(wildcard $(srcdir)/src/vsip/opt/pas/*.hpp))
+hdr	+= $(patsubst $(srcdir)/src/%, %, \
+             $(wildcard $(srcdir)/src/vsip/opt/reductions/*.hpp))
+hdr	+= $(patsubst $(srcdir)/src/%, %, \
+             $(wildcard $(srcdir)/src/vsip/opt/reductions/*.hpp))
+hdr	+= $(patsubst $(srcdir)/src/%, %, \
+             $(wildcard $(srcdir)/src/vsip/opt/sal/*.hpp))
+hdr	+= $(patsubst $(srcdir)/src/%, %, \
+             $(wildcard $(srcdir)/src/vsip/opt/signal/*.hpp))
+hdr	+= $(patsubst $(srcdir)/src/%, %, \
+             $(wildcard $(srcdir)/src/vsip/opt/simd/*.hpp))
+ifdef VSIP_IMPL_HAVE_CBE_SDK
+hdr	+= $(patsubst $(srcdir)/src/%, %, \
+             $(wildcard $(srcdir)/src/vsip/opt/cbe/alf/include/*.h))
+hdr	+= $(patsubst $(srcdir)/src/%, %, \
+             $(wildcard $(srcdir)/src/vsip/opt/cbe/alf/include/arch/cell/*.h))
+hdr	+= $(patsubst $(srcdir)/src/%, %, \
+             $(wildcard $(srcdir)/src/vsip/opt/cbe/alf/src/inc/*.h))
+hdr	+= $(patsubst $(srcdir)/src/%, %, \
+             $(wildcard $(srcdir)/src/vsip/opt/cbe/ppu/*.hpp))
+hdr	+= $(patsubst $(srcdir)/src/%, %, \
+             $(wildcard $(srcdir)/src/vsip/opt/cbe/cml/*.hpp))
+hdr	+= $(patsubst $(srcdir)/src/%, %, \
+             $(wildcard $(srcdir)/src/vsip/opt/cbe/*.h))
+hdr	+= $(patsubst $(srcdir)/src/%, %, \
+             $(wildcard $(srcdir)/src/vsip/opt/cbe/spu/*.h))
+hdr	+= $(patsubst $(srcdir)/src/%, %, \
+             $(wildcard $(srcdir)/src/vsip/opt/ukernel/*.hpp))
+hdr	+= $(patsubst $(srcdir)/src/%, %, \
+             $(wildcard $(srcdir)/src/vsip/opt/ukernel/cbe_accel/*.hpp))
+hdr	+= $(patsubst $(srcdir)/src/%, %, \
+             $(wildcard $(srcdir)/src/vsip/opt/ukernel/kernels/host/*.hpp))
+hdr	+= $(patsubst $(srcdir)/src/%, %, \
+             $(wildcard $(srcdir)/src/vsip/opt/ukernel/kernels/params/*.hpp))
+endif
+endif
+########################################################################
+# Included Files
+########################################################################
+
+# Each subdirectory may provide a Makefile fragment
+# "GNUmakefile.inc".  
+#
+# All explicit rules and variables defined in these fragments should
+# have names that begin with "dir_" where "dir" is the normalized name
+# of the subdirectory.  For example, the src/GNUmakefile.inc fragment
+# should only define entities that begin with "src_".
+#
+# Subdirectory fragments may also use double-colon rules to add to the
+# standard targets below.
+#
+# Subdirectory fragments may also append to the subdirectory variables
+# defined above.
+
+# Include Makefile fragments from all subdirectories that provide
+# them. 
+-include $(patsubst %, %/GNUmakefile.inc, $(subdirs))
+
+# Include CodeSourcery-internal documentation if appropriate.
+ifeq ($(enable_csl_documentation),1)
+  include $(csldocbookdir)/GNUmakefile.inc
+  include doc/GNUmakefile_manuals.inc
+endif
+
+########################################################################
+# Functions
+########################################################################
+
+# Return the normalized name for the directory $(1).  The
+# normalized name has all slashes replaced with underscores.
+norm_dir = $(subst /,_,$(subst $(srcdir)/,,$(1)))
+
+# Return the value of dir_$(2) where "dir" is the normalized directory
+# name of $(1).
+dir_var  = $($(call norm_dir,$(1))$(2))
+
+# Replace variables only during installation, when all final values are
+# known.
+define install_svxx_pc
+cat vsipl++.pc | sed -e "s|@suffix_@|$(suffix)|g" > vsipl++-installed.pc; \
+  $(INSTALL) -d $(DESTDIR)$(libdir)/pkgconfig; \
+  $(INSTALL_DATA) vsipl++-installed.pc \
+    $(DESTDIR)$(libdir)/pkgconfig/vsipl++$(suffix).pc;
+endef
+
+define install_sv_pc
+cat vsipl.pc | sed -e "s|@suffix_@|$(suffix)|g" > vsipl-installed.pc; \
+  $(INSTALL) -d $(DESTDIR)$(libdir)/pkgconfig; \
+  $(INSTALL_DATA) vsipl-installed.pc \
+    $(DESTDIR)$(libdir)/pkgconfig/vsipl$(suffix).pc
+endef
+
+########################################################################
+# Implicit Rules
+########################################################################
+
+# Compile a C++ source file.  In addition to $CXXFLAGS, the compiler
+# will be passed the options in $dir_CXXFLAGS, where dir is the
+# subdirectory containing the input source file, with slashes replaced
+# by underscores.
+%.$(OBJEXT): %.cpp
+	$(compile)
+
+%.$(OBJEXT): %.c
+	$(ccompile)
+
+# Generate a dependency Makefile fragment for a C++ source file.
+ifdef FASTMAKE
+# If FASTMAKE is defined, freshen up current dependencies instead
+# of regenerating them.  Useful when a header is modified in a way
+# that dependencies are preserved.
+%.d: %.cpp
+	@touch $@
+
+%.d: %.c
+	@touch $@
+else
+%.d: %.cpp
+	$(make_dep)
+
+%.d: %.c
+	$(make_cvsip_dep)
+endif
+
+########################################################################
+# Standard Targets
+########################################################################
+
+# Subdirectory Makefile fragments may add to the actions to be taken
+# by these rules by writing additional double-colon fragments.  For
+# clarity, there should be no actions in this section; just the names
+# of the targets.
+
+.FORCE:
+
+.PHONY: all
+all::
+
+.PHONY: depend
+depend:: 
+
+.PHONY: doc
+doc:: html pdf
+
+.PHONY: html
+html:: $(html_manuals)
+
+.PHONY: pdf
+pdf:: $(pdf_manuals)
+
+.PHONY: check
+check:: 
+
+.PHONY: mostlyclean
+mostlyclean::
+
+.PHONY: clean
+clean:: mostlyclean
+
+.PHONY: install
+install:: install-svxx install-sv install-pdf install-html
+
+.PHONY: install-pdf
+install-pdf:: $(foreach f,$(pdf_manuals),install-pdf-$(notdir $(f)))
+
+$(foreach f,$(pdf_manuals),$(eval $(call install_pdf_template,$(f))))
+
+.PHONY: install-html
+install-html:: $(foreach f,$(html_manuals),install-html-$(notdir $(f))) 
+
+.PHONY: install-core
+install-core::
+
+.PHONY: install-benchmarks
+install-benchmarks::
+
+$(foreach f,$(html_manuals),$(eval $(call install_html_template,$(f))))
+
+.PHONY: dist
+dist::
+
+# Include automatically generated dependency files.
+ifeq (,$(filter $(MAKECMDGOALS), depend doc mostlyclean clean))
+include $(deps)
+endif
+
+########################################################################
+# Top-Level Targets
+########################################################################
+
+# These targets are targets that apply to the top-level directory, as
+# if it were a subdirectory.
+
+all:: GNUmakefile doc libs
+
+clean::
+	rm -f $(libs) $(other_libs)
+
+libs:: $(libs) $(other_libs)
+
+GNUmakefile: \
+	$(srcdir)/GNUmakefile.in \
+	$(wildcard $(srcdir)/*/GNUmakefile.inc.in) \
+	config.status
+	./config.status
+
+config.status: $(srcdir)/configure
+	./config.status --recheck
+
+$(srcdir)/configure: $(srcdir)/configure.ac
+	cd $(srcdir) && ./autogen.sh
+
+check::
+
+install-core::
+	$(INSTALL) -d $(DESTDIR)$(sbindir)
+	$(INSTALL_SCRIPT) $(srcdir)/scripts/set-prefix.sh $(DESTDIR)$(sbindir)
+	$(INSTALL) -d $(DESTDIR)$(bindir)
+	$(INSTALL_SCRIPT) $(srcdir)/scripts/fmt-profile.pl $(DESTDIR)$(bindir)
+	$(INSTALL_SCRIPT) $(srcdir)/scripts/create_plugin_image.pl $(DESTDIR)$(bindir)
+	$(INSTALL) -d $(DESTDIR)$(docdir)
+	$(INSTALL_SCRIPT) $(srcdir)/README.bin-pkg $(DESTDIR)$(docdir)
+
+install-svxx:: install-core
+	$(install_svxx_pc)
+
+install-sv:: install-core
+	$(install_sv_pc)
+
+mostlyclean::
+	rm -f $(objects)
+	rm -f $(deps)
+
+depend:: $(deps)
+
+dist:: sdist
+
+ifeq (,$(findstring mingw32,$(host)))
+sdist: $(distname).tar.bz2
+bdist: $(distname)$(packagesuffix)-$(host).tar.bz2
+else
+# Generate Windows packages.
+sdist: $(distname).zip
+bdist: $(distname)-win-ia32.zip
+endif
+
+$(distname).tar.bz2:
+	-rm -rf $(distname)
+	mkdir $(distname)
+	cp -pr $(distfiles) $(distname)
+	-chmod -R a+r $(distname)
+	tar cjf $@ --owner=0 --group=0\
+          --exclude _darcs \
+          --exclude .cvsignore \
+          --exclude .svn \
+          --exclude autom4te.cache \
+          --exclude '*~' \
+          --exclude '.#*' \
+          $(distname)
+	-rm -rf $(distname)
+
+$(distname).zip:
+	-rm -rf $(distname)
+	mkdir $(distname)
+	cp -pr $(distfiles) $(distname)
+	-chmod -R a+r $(distname)
+	find $(distname) \
+          -name .svn -prune -o\
+          -name _darcs  -prune -o\
+          -name .cvsignore  -prune -o\
+          -name autom4te.cache  -prune -o\
+          -name '*~'  -prune -o\
+          -name '.#*'  -prune -o\
+          -name '*' -print | zip $@ -@
+	-rm -rf $(distname)
+
+$(distname)$(packagesuffix)-$(host).tar.bz2:
+ifndef DESTDIR
+	@echo "Please set DESTDIR while building binary packages."
+else
+	tar cjhf $@  --owner=0 --group=0 -C $(DESTDIR) `ls $(DESTDIR)`
+endif
+
+$(distname)-win-ia32.zip:
+ifndef DESTDIR
+	@echo "Please set DESTDIR while building binary packages."
+else
+	cd $(DESTDIR) && zip -r $@ *
+endif
+
+# Always remake dependencies when asked to.
+ifneq (,$(findstring depend, $(MAKECMDGOALS)))
+$(deps): %.d:	.FORCE
+endif

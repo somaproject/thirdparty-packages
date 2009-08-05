@@ -1,0 +1,22 @@
+2008-01-28  Jules Bergmann  <jules@codesourcery.com>
+
+	* kernel/timer.c (GETTIMEOFDAY_BROKEN): New macro to work around
+	  unimplemented gettimeofday/clock on window's powerpc-eabi sim.
+
+2007-10-25  Jules Bergmann  <jules@codesourcery.com>
+
+	Merge changes from trunk-3.0.
+	* libbench2/Makefile.in: Make OBJEXT correct.
+	* tools/Makefile.in: Likewise.
+	* tests/Makefile.in: Likewise.
+
+2007-10-25  Jules Bergmann  <jules@codesourcery.com>
+
+	Merge changes from trunk-3.0 to build for GreenHills/MCOE/PowerPC:
+	* vendor/fftw/kernel/cycle.h (getticks): Add tick counter for
+	  GreenHills/PowerPC combination.
+	* vendor/fftw/libbench2/timer.
+
+2007-10-25  Jules Bergmann  <jules@codesourcery.com>
+
+	Copied fftw/vendor/3.1.2 into fftw/trunk.

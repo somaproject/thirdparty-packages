@@ -1,0 +1,76 @@
+########################################################################
+#
+# File:   GNUmakefile.inc.in	
+# Author: Mark Mitchell 
+# Date:   2005-05-21
+#
+# Contents: Makefile fragment for doc.
+#
+########################################################################
+
+########################################################################
+# Variables
+########################################################################
+
+api_reference := doc/api-reference/api-reference
+
+doc_syn := src/vsip/core/vsip.hpp.syn
+deps    += src/vsip/core/vsip.hpp.d
+
+########################################################################
+# Rules
+########################################################################
+
+api-reference:: $(api_reference)
+install-html:: $(api_reference)
+	if test -r $(api_reference); then \
+          $(INSTALL) -d $(DESTDIR)$(htmldir); \
+          cp -r $(api_reference) $(DESTDIR)$(htmldir); \
+        fi
+
+# If synopsis was found, generate reference with that.
+# Alternatively, use doxygen if found.
+# If neither is available, but the reference is already
+# present in the source directory, copy it from there.
+
+ifdef SYNOPSIS
+$(api_reference): vsip.syn
+	rm -rf $@
+	python synopsis.py html --output=$@ $<
+else
+ifdef DOXYGEN
+$(api_reference):
+	$(DOXYGEN) doc/Doxyfile
+else
+$(api_reference):
+	if test -d $(srcdir)/$@; then \
+          mkdir -p doc/api-reference; \
+          cp -r $(srcdir)/$@ $@; \
+        fi
+endif
+endif
+
+# Call this target explicitly to copy documentation back into the 
+# source directory, if building in a separate build directory.
+doc2src: $(api_reference)
+	rm -rf $(srcdir)/doc/api-reference
+	mkdir -p $(srcdir)/doc/api-reference
+	cp -r $(api_reference) $(srcdir)/doc/api-reference
+
+mostlyclean::
+	rm -rf $(doc_syn) vsip.syn
+
+clean::
+	rm -rf $(doc_manuals) $(api_reference)
+
+%.hpp.syn: %.hpp
+	python synopsis.py parse primary_file_only=False --output=$@ $<
+
+vsip.syn: $(doc_syn)
+	python synopsis.py link --output=$@ $^
+
+%.hpp.d: %.hpp
+	@echo generating dependencies for $(@D)/$(<F)
+	$(SHELL) -ec '$(CXXDEP) $(CXXFLAGS) \
+	  $(call dir_var,$(dir $<),CXXFLAGS) $< \
+	  | sed "s|$(*F)\\.o[ :]*|$*\\.d $*\\.syn : |g" > $@'

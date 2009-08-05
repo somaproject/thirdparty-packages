@@ -1,0 +1,71 @@
+######################################################### -*-Makefile-*-
+#
+# File:   GNUmakefile.inc
+# Author: Jules Bergmann
+# Date:   2007-10-30
+#
+# Contents: Makefile fragment for apps/utils.
+#
+########################################################################
+
+# Files in this directory are not available under the BSD license, so
+# avoid putting them into cxx_sources, building them, installing them,
+# etc. when building the reference implementation.
+ifndef VSIP_IMPL_REF_IMPL
+
+########################################################################
+# Variables
+########################################################################
+
+apps_utils_CXXINCLUDES := -I$(srcdir)/src -I$(srcdir)/tests	\
+			  -I$(srcdir)/apps/utils
+apps_utils_CXXFLAGS := $(apps_utils_CXXINCLUDES)
+
+apps_utils_cxx_sources := $(wildcard $(srcdir)/apps/utils/*.cpp)
+apps_utils_cxx_headers := $(wildcard $(srcdir)/apps/utils/*.hpp)
+
+apps_utils_obj := $(patsubst $(srcdir)/%.cpp, %.$(OBJEXT), $(apps_utils_cxx_sources))
+apps_utils_exe := $(patsubst $(srcdir)/%.cpp, %$(EXEEXT), $(apps_utils_cxx_sources))
+apps_utils_targets := $(apps_utils_exe)
+
+cxx_sources += $(apps_utils_cxx_sources)
+
+apps_utils_install_sources := $(apps_utils_cxx_sources) $(apps_utils_cxx_headers)
+
+apps_utils_install_targets := $(patsubst $(srcdir)/%, %, $(apps_utils_install_sources))
+
+apps_utils_static_targets := $(patsubst %$(EXEEXT), \
+                               %.static$(EXEEXT), \
+                               $(apps_utils_targets))
+
+
+########################################################################
+# Rules
+########################################################################
+
+apps_utils:: $(apps_utils_targets)
+
+# Object files will be deleted by the parent clean rule.
+clean::
+	rm -f $(apps_utils_targets) $(apps_utils_static_targets)
+
+# Install benchmark source code and executables
+install-apps_utils:: apps_utils
+	$(INSTALL) -d $(DESTDIR)$(pkgdatadir)/apps/utils
+	$(INSTALL_DATA) apps/utils/GNUmakefile \
+	  $(DESTDIR)$(pkgdatadir)/apps/utils/GNUmakefile
+	for sourcefile in $(apps_utils_install_targets); do \
+          $(INSTALL_DATA) $(srcdir)/$$sourcefile $(DESTDIR)$(pkgdatadir)/`dirname $$sourcefile`; \
+	done
+	$(INSTALL) -d $(DESTDIR)$(exec_prefix)/apps/utils
+	for binfile in $(apps_utils_targets); do \
+	  $(INSTALL) $$binfile $(DESTDIR)$(exec_prefix)/`dirname $$binfile`; \
+	done
+
+$(apps_utils_targets): %$(EXEEXT) : %.$(OBJEXT) $(libs)
+	$(CXX) $(LDFLAGS) -o $@ $^ -Llib -lsvpp -lvsip_csl $(LIBS) || rm -f $@
+
+$(apps_utils_static_targets): %.static$(EXEEXT) : %.$(OBJEXT) $(libs)
+	$(CXX) -static $(LDFLAGS) -o $@ $^ -Llib -lsvpp -lvsip_csl $(LIBS) || rm -f $@
+
+endif # VSIP_IMPL_REF_IMPL

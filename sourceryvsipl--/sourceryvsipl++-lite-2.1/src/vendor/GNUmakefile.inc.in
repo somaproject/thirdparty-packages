@@ -1,0 +1,148 @@
+########################################################################
+#
+# File:   GNUmakefile.inc.in
+# Author: Jules Bergmann
+# Date:   2005-11-22
+#
+# Contents: Makefile fragment for vendor
+#
+########################################################################
+
+########################################################################
+# CLAPACK Rules
+########################################################################
+
+USE_BUILTIN_LAPACK      := @USE_BUILTIN_LAPACK@
+
+vendor_CLAPACK         := vendor/clapack/liblapack.a
+vendor_CLAPACK_BLAS    := vendor/clapack/libblas.a
+vendor_LIBF77          := vendor/clapack/F2CLIBS/libF77/libF77.a
+
+$(vendor_CLAPACK):
+	@echo "Building CLAPACK (see clapack.build.log)"
+	@$(MAKE) -j1 -C vendor/clapack/SRC all > clapack.build.log 2>&1
+
+$(vendor_CLAPACK_BLAS):
+	@echo "Building CLAPACK BLAS (see clapack.blas.build.log)"
+	@$(MAKE) -j1 -C vendor/clapack/BLAS/SRC all > clapack.blas.build.log 2>&1
+
+$(vendor_LIBF77):
+	@echo "Building LIBF77 (see libF77.blas.build.log)"
+	@$(MAKE) -j1 -C vendor/clapack/F2CLIBS/libF77 all > libF77.blas.build.log 2>&1
+
+ifdef USE_BUILTIN_LAPACK
+lib/liblapack.a: $(vendor_CLAPACK)
+	cp $< $@
+
+lib/libblas.a: $(vendor_CLAPACK_BLAS)
+	cp $< $@
+
+lib/libF77.a: $(vendor_LIBF77)
+	cp $< $@
+
+libs += lib/liblapack.a lib/libblas.a lib/libF77.a
+
+clean::
+	@$(MAKE) -j1 -C vendor/clapack/F2CLIBS/libF77 clean > libF77.blas.clean.log 2>&1
+
+install-svxx:: install-core
+	$(INSTALL) -d $(DESTDIR)$(includedir)
+	$(INSTALL_DATA) src/cblas.h $(DESTDIR)$(includedir)
+
+install-core:: lib/liblapack.a lib/libblas.a lib/libF77.a
+	$(INSTALL) -d $(DESTDIR)$(builtin_libdir)
+	$(INSTALL_DATA) lib/liblapack.a $(DESTDIR)$(builtin_libdir)
+	$(INSTALL_DATA) lib/libblas.a $(DESTDIR)$(builtin_libdir)
+	$(INSTALL_DATA) lib/libF77.a $(DESTDIR)$(builtin_libdir)
+endif
+
+
+
+# Install libg2c, if it is present (the --with-g2c-copy configure
+# option will place a copy in $objdir/lib).
+install-core::
+	$(INSTALL) -d $(DESTDIR)$(builtin_libdir)
+	if test -f lib/libg2c.a; then					\
+	  $(INSTALL_DATA) lib/libg2c.a $(DESTDIR)$(builtin_libdir);	\
+	fi
+
+
+
+
+########################################################################
+# FFTW Rules
+########################################################################
+
+USE_BUILTIN_FFTW  := @USE_BUILTIN_FFTW@
+USE_BUILTIN_FFTW_FLOAT := @USE_BUILTIN_FFTW_FLOAT@
+USE_BUILTIN_FFTW_DOUBLE := @USE_BUILTIN_FFTW_DOUBLE@
+USE_BUILTIN_FFTW_LONG_DOUBLE := @USE_BUILTIN_FFTW_LONG_DOUBLE@
+
+FFTW_SUBDIRS = support kernel simd dft rdft reodft threads api
+
+vpath %.h src:$(srcdir)
+
+lib/libfftw3f.$(LIBEXT): vendor/fftw3f/.libs/libfftw3f.a
+	cp $< $@
+
+vendor/fftw3f/.libs/libfftw3f.a:
+	@echo "Building FFTW float (see fftw-f.build.log)"
+	@$(MAKE) -j1 -C vendor/fftw3f config.h > fftw-f.build.log 2>&1
+	@for dir in $(FFTW_SUBDIRS); do \
+	  $(MAKE) -j1 -C vendor/fftw3f/$$dir all >> fftw-f.build.log 2>&1; \
+	done
+	@$(MAKE) -j1 -C vendor/fftw3f all-am >> fftw-f.build.log 2>&1
+
+lib/libfftw3.$(LIBEXT): vendor/fftw3/.libs/libfftw3.a
+	cp $< $@
+
+vendor/fftw3/.libs/libfftw3.a:
+	@echo "Building FFTW double (see fftw-d.build.log)"
+	@$(MAKE) -j1 -C vendor/fftw3 config.h > fftw-d.build.log 2>&1
+	@for dir in $(FFTW_SUBDIRS); do \
+	  $(MAKE) -j1 -C vendor/fftw3/$$dir all >> fftw-d.build.log 2>&1; \
+	done
+	@$(MAKE) -j1 -C vendor/fftw3 all-am >> fftw-d.build.log 2>&1
+
+lib/libfftw3l.$(LIBEXT): vendor/fftw3l/.libs/libfftw3l.a
+	cp $< $@
+
+vendor/fftw3l/.libs/libfftw3l.a:
+	@echo "Building FFTW long double (see fftw-l.build.log)"
+	@$(MAKE) -j1 -C vendor/fftw3l config.h > fftw-l.build.log 2>&1
+	@for dir in $(FFTW_SUBDIRS); do \
+	  $(MAKE) -j1 -C vendor/fftw3l/$$dir all >> fftw-l.build.log 2>&1; \
+	done
+	@$(MAKE) -j1 -C vendor/fftw3l all-am >> fftw-l.build.log 2>&1
+
+ifdef USE_BUILTIN_FFTW
+  ifdef USE_BUILTIN_FFTW_FLOAT
+    vendor_FFTW_LIBS += lib/libfftw3f.$(LIBEXT)
+  endif
+  ifdef USE_BUILTIN_FFTW_DOUBLE
+    vendor_FFTW_LIBS += lib/libfftw3.$(LIBEXT)
+  endif
+  ifdef USE_BUILTIN_FFTW_LONG_DOUBLE
+    vendor_FFTW_LIBS += lib/libfftw3l.$(LIBEXT)
+  endif
+
+libs += $(vendor_FFTW_LIBS) 
+
+clean::
+	@echo "Cleaning FFTW (see fftw.clean.log)"
+	@rm -f fftw.clean.log
+	@for ldir in $(subst .a,,$(subst lib/lib,,$(vendor_FFTW_LIBS))); do \
+	  $(MAKE) -j1 -C vendor/$$ldir clean >> fftw.clean.log 2>&1; \
+	  echo "$(MAKE) -j1 -C vendor/$$ldir clean "; done
+
+install-svxx:: install-core
+	$(INSTALL) -d $(DESTDIR)$(includedir)
+	$(INSTALL_DATA) src/fftw3.h $(DESTDIR)$(includedir)
+
+install-core:: $(vendor_FFTW_LIBS)
+	@echo "Installing FFTW"
+	$(INSTALL) -d $(DESTDIR)$(builtin_libdir)
+	@for lib in $(vendor_FFTW_LIBS); do \
+	  echo "$(INSTALL_DATA) $$lib  $(DESTDIR)$(builtin_libdir)"; \
+	  $(INSTALL_DATA) $$lib  $(DESTDIR)$(builtin_libdir); done
+endif

@@ -1,0 +1,24 @@
+Source: sourceryvsipl++
+Priority: extra
+Maintainer: Stuart Layton <slayton@mit.edu>
+Build-Depends: debhelper (>= 7), autotools-dev, cdbs, libfftw3-dev
+Standards-Version: 3.8.0
+Section: libs
+Homepage: http://www.CodeSourcery.com
+
+
+Package: libsourceryvsipl-dev
+Section: libdevel
+Architecture: any
+Depends: libsourceryvsipl, ${misc:Depends}
+Description: Development Library and Headers
+ Long description needed
+
+
+Package: libsourceryvsipl
+Section: libs
+Architecture: any
+Provides: libsourceryvsipl
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Desctiption: Runtime Library
+ Long Description Needed

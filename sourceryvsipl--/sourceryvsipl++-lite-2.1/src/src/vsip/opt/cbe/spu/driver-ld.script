@@ -1,0 +1,6 @@
+SECTIONS
+{
+  . = 0x5000; . -= 128;
+  .myseg : { *(.mybss) }
+}
+INSERT AFTER .bss

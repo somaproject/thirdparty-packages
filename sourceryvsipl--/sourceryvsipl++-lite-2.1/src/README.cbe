@@ -1,0 +1,235 @@
+Installation guide for Sourcery VSIPL++ with support for Cell BE
+================================================================
+
+This is a release 1.4 of Sourcery VSIPL++ with support for the Cell
+Broadband Engine processor, using the CML library.
+
+This is a source package.  Before using it, you will need to configure,
+build, and install it on your system.  Please read the "Installation"
+chapter (2) in the quickstart.  Detailed instructions particular to
+the CBE configuration are given below.
+
+1. Set up the build system and install necessary prerequisites:
+
+   This release of Sourcery VSIPL++ expects a Cell-based Fedora 7 build
+   system with version 3.0 of the IBM Cell SDK.  (Cross-compilation is
+   not presently supported, but this is primarily a system configuration
+   and installation issue.)  In addition to the Cell SDK, the following
+   system RPMs must be installed:
+
+	atlas-altivec
+	atlas-altivec-devel
+	fftw
+	fftw-devel
+
+
+2. Install the CML library.
+
+   In subsequent steps, $cml_prefix refers to the installation
+   location of CML.
+   
+
+3. Configure the Sourcery VSIPL++ library.
+
+   Run '$(srcdir)/configure' from within the VSIPL++ build directory.
+   The following options are suggested for use on the Cell BE:
+   
+   --with-cbe-sdk=3.0 --disable-fft-long-double --disable-parallel
+   --with-lapack=atlas --with-atlas-include=/usr/include/atlas
+   --with-atlas-libdir=/usr/lib/altivec --enable-fft=fftw3
+   --with-builtin-simd-routines=generic --with-complex=split
+   --with-test-level=1 --prefix=$svpp_prefix
+   --with-cml-prefix=$cml_prefix 
+   --enable-timer=power_tb
+   
+   Here, $svpp_prefix is the directory into which the Sourcery VSIPL++
+   library should be installed, and $cml_prefix is the directory
+   into which the CML library was installed in step 2.
+   
+   The Sourcery VSIPL++ configure script also uses environment variables
+   to select the compiler, linker, and compile options.  The following
+   environment variable settings are suggested for use on the Cell BE.
+   (use -m64 instead of -m32 for a 64-bit variant; this must match the -
+   m option used when compiling the CML library):
+
+  * CC=ppu-gcc                    The PPU C compiler to use.
+  * CXX=ppu-g++                   The PPU C++ compiler to use.
+  * CFLAGS="-m32 -O2 -DNDEBUG"    The PPU C compiler flags.
+  * CXXFLAGS="-m32 -O2 -DNDEBUG"  The PPU C++ compiler flags.
+  * LD=ppu-ld                     The PPU linker to use.
+
+   (The SPU compiler and linker are selected automatically, and need not
+   be specified directly.)
+  
+   These environment variables can be specified as arguments to
+   configure, as well as literally as environment variables; e.g., a
+   commmand line might look like this:
+  
+  $(srcdir)/configure --prefix=$svpp_path CC=ppu-gcc CXX=ppu-g++ ...
+
+   Check for warnings and error messages in the configure output before
+   continuing.
+
+   $(srcdir)/examples/cell/setup.sh provides an example of invoking
+   configure.
+
+
+4. Make the library
+
+   To build the library, run "make" in the build directory.
+
+
+5. Install the library
+
+   To install the library into the $svpp_prefix directory specified in
+   the configuration options, run "make install" in the build directory.
+
+
+5. Set up your environment for pkg-config
+
+   Sourcery VSIPL++ uses the pkg-config tool to provide information on
+   include directory locations, library directory locations, required
+   libraries, and compiler options.
+
+   If you are using pkg-config, you will need to add the directory
+   '$svpp_prefix/lib/pkgconfig' to the environment variable
+   PKG_CONFIG_PATH (where $svpp_prefix is the installation prefix
+   specified in step 3).  For example:
+
+	export PKG_CONFIG_PATH=/opt/sourcery-vsipl++/lib/pkgconfig
+
+   Now you should be able to use the pkg-config command to query
+   build parameters.  For example:
+
+	> pkg-config vsipl++ --libs
+	-m32 -L/scratch/brooks/vsipl-install/lib
+	 -L/opt/cell/sdk/usr/lib -lvsip_csl -lsvpp -llapack -lblas
+	 -lF77 -lalf -lspe2 -ldl -lcml
+
+   If you are not using pkg-config, you can determine the corresponding
+   parameters by looking at the file
+
+	$svpp_prefix/lib/pkgconfig/vsipl++.pc
+
+   It will look something like this:
+
+	prefix=/scratch/brooks/vsipl-install
+	exec_prefix=${prefix}
+	libdir=${exec_prefix}/lib
+	includedir=${prefix}/include
+	cxx=ppu-g++
+	cppflags=-I${includedir}  -I/opt/cell/sdk/usr/include
+	cxxflags=-mcpu=cell -maltivec -m32 -O2
+	ldflags=-m32 -L/opt/cell/sdk/usr/lib
+	par_service=none
+	par_boot=
+	par_halt=
+	qmtest_target=local_host.LocalHost
+
+	Name: Sourcery VSIPL++
+	Description: CodeSourcery VSIPL++ library
+	Version: 1.4
+	Libs: ${ldflags} -L${libdir} -lvsip_csl -lsvpp -llapack
+	-lblas -lF77 -lcml -lalf -lspe2 -ldl -lcml
+	Cflags: ${cppflags}
+
+
+   The variables ${cppflags} and ${cxxflags} should be used for compilation,
+   the variable ${Libs} should be used for linking.
+
+   Please also refer to chapter 3 of the Quickstart "Building Applications"
+   for details on using pkg-config, make, and building manually.
+
+
+6. Set ALF_LIBRARY_PATH environment variable.
+
+   It is necessary to set ALF_LIBRARY_PATH to indicate where VSIPL++
+   and CML's ALF kernels can be found.
+
+   With SDK 3.0, ALF_LIBRARY_PATH can only contain a single
+   directory, so it is necessary to copy the CML kernels into
+   same directory as the VSIPL++ kernels.
+
+   	> cp $cml_prefix/lib/cml_kernels.so $svpp_prefix/lib
+	> setenv ALF_LIBRARY_PATH $svpp_prefix/lib
+
+   SDK 3.1 and later allow multiple directories separated by ':'
+   in ALF_LIBRARY_PATH:
+
+   	> setenv ALF_LIBRARY_PATH $svpp_prefix/lib:$cml_prefix/lib
+   
+
+7. Run tests
+
+   The library comes with a test-suite that validates its operation.
+   The tests are located in the 'tests' subdirectory of source package.
+   They can be run with a makefile called 'make.standalone'.
+
+   If you are using pkg-config, you can run the tests by:
+
+	> cd ${srcdir}/tests
+	> make -f make.standalone
+
+   Each test will result in a 'PASS' or 'FAIL' message.
+
+   Note that some compilation warnings may be issued by the compiler
+   when compiling the library with optimization (in particular with
+   the -DNDEBUG option).  These are expected.
+
+   You can also run a single test by specifying a make target
+   'xyz.test'.  For example:
+
+	> make -f make.standalone appmap.test
+
+   If you are not using pkg-config, you will need to edit 
+   the 'CXX', 'CXXFLAGS', and 'LIBS' variables in make.standalone.
+
+    - CXX should be your compiler (ppu-g++)
+    - CXXFLAGS should be your compilation flags (the combination of
+      $cxxflags and $cppflags variables from the vsipl++.pc file
+      described above)
+    - LIBS should be your linker flags (the expansion of the Libs:
+      line from the vsipl++.pc file described above).
+
+   If you have trouble setting these flags, please let us know
+   and we will try to help.
+
+
+8. Run benchmarks
+
+   Sourcery VSIPL++ also includes a number of micro-benchmarks that
+   measure the performance of various kernels in the library.  These
+   are located in the 'benchmarks' directory and can be built with
+   a 'make.standalone' makefile located in that directory.
+
+   (The examples below assume that you are using pkg-config.  If not,
+   you will need to edit make.standalone as above).
+
+   For example, to build the vector-multiply benchmark:
+
+	> cd benchmarks
+	> make -f make.standalone vmul
+
+   The resulting executable can then be run:
+
+	> run1.sh vmul -2 -ops -stop 20
+
+   You'll notice that the benchmarks take command line arguments.
+   Their documentation is outside the scope of these release notes,
+   but in general:
+
+    '-<number>' indicates which benchmark case to run
+                (for the vmul benchmark, '-2' indicates complex vector
+                element-wise multiply, equiv to SAL cvmulx/zvmulx routines).
+    '-ops'      specifies that the metric of MOPS (10e6 operations per
+                second should) be reported.
+    '-stop 20'  indicates that the parameter sweep should stop at 2^20.
+
+
+
+Please let us know if you have any questions or feedback on using
+Sourcery VSIPL++.  We are very excited to have you using the product
+and want to make sure that it works well!
+
+			thanks,
+			-- The CodeSourcery VSIPL++ team

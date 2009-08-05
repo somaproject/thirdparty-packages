@@ -1,0 +1,89 @@
+######################################################### -*-Makefile-*-
+#
+# File:   GNUmakefile.inc
+# Author: Don McCoy
+# Date:   2006-04-11
+#
+# Contents: Makefile fragment for src/vsip_csl.
+#
+########################################################################
+
+# Files in this directory are not available under the BSD license, so
+# avoid putting them into cxx_sources, building them, installing them,
+# etc. when building the reference implementation.
+ifndef VSIP_IMPL_REF_IMPL
+
+########################################################################
+# Variables
+########################################################################
+
+VSIP_CSL_HAVE_PNG	:= @VSIP_CSL_HAVE_PNG@
+
+src_vsip_csl_CXXINCLUDES := -I$(srcdir)/src
+src_vsip_csl_CXXFLAGS := $(src_vsip_csl_CXXINCLUDES)
+
+src_vsip_csl_cxx_sources := $(srcdir)/src/vsip_csl/matlab_file.cpp
+
+ifdef VSIP_CSL_HAVE_PNG
+src_vsip_csl_cxx_sources += $(srcdir)/src/vsip_csl/png.cpp
+endif
+src_vsip_csl_cxx_objects := $(patsubst $(srcdir)/%.cpp, %.$(OBJEXT),\
+                              $(src_vsip_csl_cxx_sources))
+cxx_sources += $(src_vsip_csl_cxx_sources)
+
+libs += lib/libvsip_csl.$(LIBEXT)
+
+ifdef BUILD_SHARED_LIBS
+libs += lib/libvsip_csl.so
+endif
+
+########################################################################
+# Rules
+########################################################################
+
+lib/libvsip_csl.$(LIBEXT): $(src_vsip_csl_cxx_objects)
+	$(archive)
+
+# Install the extensions library and its header files.
+install-core:: lib/libvsip_csl.$(LIBEXT)
+	$(INSTALL) -d $(DESTDIR)$(libdir)
+	$(INSTALL_DATA) lib/libvsip_csl.$(LIBEXT) \
+          $(DESTDIR)$(libdir)/libvsip_csl$(suffix).$(LIBEXT)
+
+ifdef BUILD_SHARED_LIBS
+lib/libvsip_csl.so: $(src_vsip_csl_cxx_objects)
+	$(link_lib_dso)
+
+install-core:: lib/libvsip_csl.so
+	$(INSTALL) -d $(DESTDIR)$(libdir)
+	$(INSTALL_DATA) lib/libvsip_csl.$(LIBEXT) \
+          $(DESTDIR)$(libdir)/libvsip_csl$(suffix).so
+endif
+
+install-svxx:: install-core
+	$(INSTALL) -d $(DESTDIR)$(includedir)/vsip_csl
+	$(INSTALL) -d $(DESTDIR)$(includedir)/vsip_csl/img
+	$(INSTALL) -d $(DESTDIR)$(includedir)/vsip_csl/img/impl
+	for header in $(wildcard $(srcdir)/src/vsip_csl/img/*.hpp); do \
+          $(INSTALL_DATA) $$header $(DESTDIR)$(includedir)/vsip_csl/img; \
+	done
+	for header in $(wildcard $(srcdir)/src/vsip_csl/img/impl/*.hpp); do \
+          $(INSTALL_DATA) $$header $(DESTDIR)$(includedir)/vsip_csl/img/impl; \
+	done
+	$(INSTALL) -d $(DESTDIR)$(includedir)/vsip_csl/stencil
+	for header in $(wildcard $(srcdir)/src/vsip_csl/*.hpp); do \
+          $(INSTALL_DATA) $$header $(DESTDIR)$(includedir)/vsip_csl; \
+	done
+	for header in $(wildcard $(srcdir)/src/vsip_csl/stencil/*.hpp); do \
+          $(INSTALL_DATA) $$header $(DESTDIR)$(includedir)/vsip_csl/stencil; \
+	done
+	$(INSTALL) -d $(DESTDIR)$(includedir)/vsip_csl/output
+	for header in $(wildcard $(srcdir)/src/vsip_csl/output/*.hpp); do \
+          $(INSTALL_DATA) $$header $(DESTDIR)$(includedir)/vsip_csl/output; \
+	done
+	$(INSTALL) -d $(DESTDIR)$(includedir)/vsip_csl/cvsip
+	for header in $(wildcard $(srcdir)/src/vsip_csl/cvsip/*.hpp); do \
+          $(INSTALL_DATA) $$header $(DESTDIR)$(includedir)/vsip_csl/cvsip; \
+	done
+
+endif

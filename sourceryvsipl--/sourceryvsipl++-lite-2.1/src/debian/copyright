@@ -1,0 +1,775 @@
+This package was debianized by Stuart Layton <slayton@mit.edu> on
+Wed, 13 Aug 2008 09:32:55 -0400.
+
+It was downloaded from http://www.codesourcery.com/vsiplplusplus/1.4/download.html
+
+Upstream Author(s): 
+
+	Copyright (c) 2005 CodeSourcery, LLC
+
+Copyright: 
+
+
+	Copyright 2009 Stuart Layton <slayton@mit.edu>
+
+License:
+
+
+	The Debian packaging is (C) 2008, Stuart Layton <slayton@mit.edu> and
+	is licensed under the GPL, see `/usr/share/common-licenses/GPL'.
+
+------------------------------------------------------------------------- 
+Sourcery VSIPL++ is available under three separate licenses:
+
+1) Commercial Optimized Implementation
+
+  The entire library is available under the terms of a commercial license,
+  described in the file LICENSE.Commercial.  Please contact CodeSourcery
+  (1-888-776-0262 or sales@codesourcery.com) for details on obtaining
+  rights to use the library under this license.
+
+2) GPL Optimized Implementation
+
+  The entire library is available under the terms of the GNU General Public
+  License, contained in the file LICENSE.GPL.
+
+3) BSD Reference Implementation
+
+  The core parts of the library (listed below) are available under the BSD
+  license, contained in the file LICENSE.BSD.
+
+  When the BSD licensed files are configured with "--enable-ref-impl", the
+  result is the VSIPL++ reference implementation.
+
+  The core library parts available under the BSD license are:
+
+    - autogen.sh
+    - configure
+    - configure.ac
+    - GNUmakefile.in
+    - install.sh
+    - vsipl++-pc.in
+    - src/vsip/*        All files in the src/vsip directory
+    - src/vsip/core/    All files in the src/vsip/core hierarchy
+    - tests/ref-impl/*  All files in the tests/ref-impl directory
+
+  All remaining files are only available under a commercial license from
+  CodeSourcery or under the GPL.
+
+  For example, and without limitation, the following files are not available
+  under the BSD license and cannot be used with the library when configured
+  as the reference implementation:
+
+   - synopsys.py.in
+    - apps              All files in the apps hierarchy.
+    - benchmarks        All files in the benchmarks hierarchy.
+    - scripts           All files in the scripts hierarchy.
+    - scripting         All files in the scripting hierarchy.
+    - src/vsip/opt      All files in the src/vsip/opt hierarchy.
+    - src/vsip_csl      All files in the src/vsip_csl hierarchy.
+
+ --- BSD License ---
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are
+met:
+
+    * Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above
+      copyright notice, this list of conditions and the following
+      disclaimer in the documentation and/or other materials provided
+      with the distribution.
+    * Neither the name of the CodeSourcery nor the names of its
+      contributors may be used to endorse or promote products derived
+      from this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+   --- Commercial License
+
+Sourcery VSIPL++ License Agreement
+
+1. Parties.  The parties to this Agreement are you, the licensee
+("You" or "Licensee") and CodeSourcery.  If You are not acting on
+behalf of Yourself as an individual, then "You" means Your company or
+Organization.
+
+2. Definitions.
+
+2.1. "Authorized Users."  The developers for whom license fees are
+fully paid by Licensee and that are authorized to use the Software.
+The number of Authorized Users is provided on the Confidential Price
+Quotation.  This number may be increased by Licensee from time-to-time
+by purchasing additional licenses as provided below.
+
+2.2. "Composite Product(s)."  Software and/or hardware
+products produced by Licensee for distribution hereunder that result
+from the integration and merger of Licensee products with Software
+licensed and provided by CodeSourcery hereunder.
+
+2.3. "Effective Date."  The date on which Licensee executes this
+Agreement or the date on which CodeSourcery gives Licensee access to
+CodeSourcery's electronic support system, whichever is later.
+
+2.4. "Proprietary Rights."  All rights in and to copyrights, rights to
+register copyrights, trade secrets, inventions, patents, patent
+rights, trademarks, trademark rights, confidential and proprietary
+information protected under contract or otherwise under law, and other
+similar rights or interests in intellectual or industrial property.
+
+2.5. "Software."  Libraries, in source code and binary form, and
+documentation referred to as Sourcery VSIPL++(tm) (the "Software"),
+including any Updates thereto.
+
+2.6. "Supported Platforms."  The set of host and target platforms for
+which CodeSourcery will provide support under this Agreement as set
+forth on the Confidential Price Quotation.
+
+3. License to Software for Internal Use.  Subject to the terms and
+conditions hereof, and only for the term hereof, CodeSourcery hereby
+grants to Licensee, and Licensee hereby accepts, a limited,
+non-exclusive license under the Proprietary Rights of CodeSourcery to
+install and use the Software by the Authorized Users for internal use.
+
+4. Integration and Merger License.  Subject to the terms and
+conditions hereof, and only for the term hereof, CodeSourcery hereby
+grants to Licensee the right and license to create derivative works
+based on the Software to create Composite Product(s), using the
+Software to be provided by CodeSourcery, provided that a Composite
+Product may not be a signal- or image-processing toolkit or library
+and must provide substantially different functionality than the
+Software.
+
+5. Distribution License.  Subject to the terms and conditions hereof
+and only for the term hereof, CodeSourcery hereby grants to Licensee
+the right and license to use, reproduce, publicly display, publish,
+and distribute the Composite Product(s) in object code form only,
+throughout Licensee's normal distribution channels.
+
+6. Subscription Term.  This Agreement shall have a term of one (1)
+year.  The initial subscription term of this Agreement shall commence
+as of the Effective Date hereof and shall continue for a period of one
+(1) year.  The initial subscription term shall automatically renew for
+successive one (1) year terms unless either party notifies the other
+in writing not less than ninety (90) days prior to the expiration of
+the current term of its intention not to renew.
+
+7. Updates.  During the term of this Agreement, Licensee may download,
+free of charge, any new version(s), update(s), or upgrade(s)
+("Updates") to the Software that CodeSourcery makes available through
+CodeSourcery's electronic support system at such times as may be
+determined by CodeSourcery in its sole discretion.
+
+8. License And Technical Support Fees.  License fees and technical
+support fees are combined under this Agreement and are payable
+annually, in advance, within thirty (30) days of the Effective Date.
+The fee for the initial subscription term is provided on the
+Confidential Price Quotation, and the renewal fees shall increase by
+3% annually.  Renewal fees are due and payable on each anniversary of
+the Effective Date.  All fees are non-refundable and are exclusive of
+sales or use taxes and any levy imposed on the transportation or use
+of the Software.  Licensee shall pay all such charges either as levied
+by taxing authorities or as invoiced by CodeSourcery.
+
+9. Purchase of Additional Licenses.  If Licensee purchases license
+rights for additional Authorized Users, such additional licenses shall
+be governed by the terms and conditions hereof.  Except as may be
+expressly provided on the Confidential Price Quotation, pricing for
+additional licenses shall be in accordance with CodeSourcery's
+then-current price list, which may be updated by CodeSourcery from
+time to time, pro- rated as appropriate for the remainder of the
+current subscription term.  Licensee agrees that, absent
+CodeSourcery's express written acceptance thereof, the terms and
+conditions contained in any purchase order or other document issued by
+Licensee to CodeSourcery for the purchase of additional licenses,
+shall not be binding on CodeSourcery to the extent that such terms and
+conditions are additional to or inconsistent with those contained in
+this Agreement.
+ 
+10. Technical Support.
+
+10.1. Scope of Support.  CodeSourcery shall assist Licensee in
+installing and using the Software in binary form.  CodeSourcery shall
+correct defects in the Software reported by Customer, subject to the
+limitations set forth below.  CodeSourcery shall impose no limit on
+the number of support requests made by Licensee.
+
+10.2. Electronic Support System.  Licensee shall make all support
+requests via CodeSourcery's electronic support system, and
+CodeSourcery shall respond via the same electronic support system.
+Licensee shall appoint up to two Technical Contacts, who will be
+provided access to CodeSourcery's electronic support system.  Licensee
+may replace either or both of the Technical Contacts from time to time
+by written notification to CodeSourcery.  CodeSourcery will not accept
+support requests by telephone or other means.
+
+10.3. Response Time.  CodeSourcery's electronic support system will
+provide Licensee with an immediate acknowledgement of the support
+request (including a unique tracking number) by electronic mail.
+CodeSourcery shall respond to all support requests within one business
+day, except in extraordinary circumstances.  CodeSourcery shall
+attempt to resolve all support requests within three business days.
+
+10.4. No Guarantee of Resolution.  CodeSourcery does not guarantee
+that it will be able to resolve all support requests.  Without
+limitation, CodeSourcery may, in its sole discretion, determine that a
+defect in the Software is too difficult to correct, or than any
+correction would likely risk the introduction of additional defects,
+or that the defect is not likely to be encountered often enough to be
+worthy of correction, or that the defect is insufficiently severe to
+be worthy of correction.
+
+10.5. Support for Previous Versions.  After the release of an Update
+for a Supported Platform, CodeSourcery shall provide support for
+previous version(s) of the Software for a period of six (6) months.
+CodeSourcery will have no obligation to provide support after this
+period.
+
+11. Termination.
+
+11.1. Grounds for Termination.  CodeSourcery may terminate this
+Agreement upon thirty (30) days written notice of a material breach of
+this Agreement if such breach is not cured; provided that the
+distribution of the Software in source code form will be deemed a
+material breach that cannot be cured.
+
+11.2. Effects of Expiration or Termination.  Upon the expiration or
+termination hereof, Licensee shall cease distributing Composite
+Product(s) incorporating the Software.  Notwithstanding anything to
+the contrary contained herein, sublicenses for all Composite
+Product(s) in any form, including any derivative works based on
+Software, granted by Licensee prior to the expiration date or the
+effective date of termination of this Agreement shall remain in full
+force and effect following such dates.
+
+11.3. Continuing Obligations.  The following obligations shall survive
+the expiration or termination hereof: (i) any and all warranty
+disclaimers or limitations of liability herein, (ii) any covenant
+granted herein for the purpose of determining ownership of, or
+protecting, the Proprietary Rights, or any remedy for breach thereof,
+and (iii) the payment of taxes, duties, or any fees to CodeSourcery
+hereunder.
+
+12. Confidentiality of Licensed Software.  Licensee acknowledges
+CodeSourcery's claim that the Software embodies valuable trade secrets
+consisting of algorithms, logic, design, and coding methodology
+proprietary to CodeSourcery.  Licensee shall safeguard the
+confidentiality of the Software, using the same standard of care which
+Licensee uses for its similar confidential materials, but in no event
+less than reasonable care.  Licensee shall not: (i) distribute,
+transfer, loan, rent, or provide access to the Software, except as
+provided herein; or (ii) remove or add any Proprietary Rights notice
+associated with the Software without the express written permission of
+CodeSourcery.
+
+13. Assignment and Transfers.  Licensee may not transfer any rights
+under this Agreement without the prior written consent of
+CodeSourcery, which consent shall not be unreasonably withheld.  A
+condition to any transfer or assignment shall be that the recipient
+agrees to the terms of this Agreement.  Any attempted transfer or
+assignment in violation of this provision shall be null and void.
+
+14. Ownership.  CodeSourcery owns the Software and all Proprietary
+Rights embodied therein, including copyrights and valuable trade
+secrets embodied in its design and coding methodology.  The Software
+is protected by United States copyright laws and international treaty
+provisions.  CodeSourcery also owns all rights, title and interest in
+and with respect to its trade names, domain names, trade dress, logos,
+trademarks, service marks, and other similar rights or interests in
+intellectual property.  This Agreement provides Licensee only a
+limited use license, and no ownership of any intellectual property.
+
+15. Warranty Disclaimer; Limitation of Liability.  CODESOURCERY
+PROVIDES THE SOFTWARE "AS-IS".  CODESOURCERY DOES NOT MAKE ANY
+WARRANTY OF ANY KIND, EXPRESS OR IMPLIED.  CODESOURCERY SPECIFICALLY
+DISCLAIMS THE IMPLIED WARRANTIES OF TITLE, NON- INFRINGEMENT,
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, SYSTEM INTEGRATION,
+AND DATA ACCURACY.  THERE IS NO WARRANTY OR GUARANTEE THAT THE
+OPERATION OF THE SOFTWARE WILL BE UNINTERRUPTED, ERROR-FREE, OR
+VIRUS-FREE, OR THAT THE SOFTWARE WILL MEET ANY PARTICULAR CRITERIA OF
+PERFORMANCE, QUALITY, ACCURACY, PURPOSE, OR NEED.  LICENSEE ASSUMES
+THE ENTIRE RISK OF SELECTION, INSTALLATION, AND USE OF THE SOFTWARE.
+THIS DISCLAIMER OF WARRANTY CONSTITUTES AN ESSENTIAL PART OF THIS
+AGREEMENT.  NO USE OF THE SOFTWARE IS AUTHORIZED HEREUNDER EXCEPT
+UNDER THIS DISCLAIMER.
+
+16. Local Law.  If implied warranties may not be disclaimed under
+applicable law, then ANY IMPLIED WARRANTIES ARE LIMITED IN DURATION TO
+THE PERIOD REQUIRED BY APPLICABLE LAW.
+
+17. Limitation of Liability.  INDEPENDENT OF THE FORGOING PROVISIONS,
+IN NO EVENT AND UNDER NO LEGAL THEORY, INCLUDING WITHOUT LIMITATION,
+TORT, CONTRACT, OR STRICT PRODUCTS LIABILITY, SHALL EITHER PARTY BE
+LIABLE TO THE OTHER OR ANY OTHER PERSON FOR ANY INDIRECT, SPECIAL,
+INCIDENTAL, OR CONSEQUENTIAL DAMAGES OF ANY KIND, INCLUDING WITHOUT
+LIMITATION, DAMAGES FOR LOSS OF GOODWILL, WORK STOPPAGE, COMPUTER
+MALFUNCTION, OR ANY OTHER KIND OF COMMERCIAL DAMAGE, EVEN IF THE PARTY
+HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.  THIS LIMITATION
+SHALL NOT APPLY TO LIABILITY FOR DEATH OR PERSONAL INJURY TO THE
+EXTENT PROHIBITED BY APPLICABLE LAW.  IN NO EVENT SHALL CODESOURCERY'S
+LIABILITY FOR ACTUAL DAMAGES FOR ANY CAUSE WHATSOEVER, AND REGARDLESS
+OF THE FORM OF ACTION, EXCEED THE AMOUNT PAID BY LICENSE UNDER THIS
+AGREEMENT DURING THE APPLICABLE SUBSCRIPTION TERM.
+
+18. Non-Exclusive Licenses.  The licenses granted herein are
+non-exclusive.  CodeSourcery may compete with Licensee, and
+CodeSourcery may grant licenses to third parties who may compete with
+Licensee.
+
+19. Reservation of Rights.  All rights not expressly granted to
+Licensee herein are expressly reserved by CodeSourcery.
+
+20. Export Controls.  Licensee agrees to comply with all export laws
+and restrictions and regulations of the United States or foreign
+agencies or authorities, and not to export or re-export the Software
+or any direct product thereof in violation of any such restrictions,
+laws or regulations, or without all necessary approvals.  As
+applicable, each party shall obtain and bear all expenses relating to
+any necessary licenses and/or exemptions with respect to its own
+export of the Software from the U.S.  Neither the Software nor the
+underlying information or technology may be electronically transmitted
+or otherwise exported or re-exported (i) into Cuba, Iran, Iraq, Libya,
+North Korea, Sudan, Syria or any other country subject to U.S. trade
+sanctions covering the Software, to individuals or entities controlled
+by such countries, or to nationals or residents of such countries
+other than nationals who are lawfully admitted permanent residents of
+countries not subject to such sanctions; or (ii) to anyone on the
+U.S. Treasury Department's list of Specially Designated Nationals and
+Blocked Persons or the U.S. Commerce Department's Table of Denial
+Orders.  Licensee is responsible for complying with any local laws in
+Licensee's jurisdiction which might impact Licensee's right to import,
+export or use the Software, and Licensee represents that Licensee has
+complied with any regulations or registration procedures required by
+applicable law to make this license enforceable.
+
+21. Severability.  If any provision of this Agreement is declared
+invalid or unenforceable, such provision shall be deemed modified to
+the extent necessary and possible to render it valid and enforceable.
+In any event, the unenforceability or invalidity of any provision
+shall not affect any other provision of this Agreement, and this
+Agreement shall continue in full force and effect, and be construed
+and enforced, as if such provision had not been included, or had been
+modified as above provided, as the case may be.
+
+22. Arbitration.  Except for actions to protect intellectual property
+rights and to enforce an arbitrator's decision hereunder, all
+disputes, controversies, or claims arising out of or relating to this
+Agreement or a breach thereof shall be submitted to and finally
+resolved by arbitration under the rules of the American Arbitration
+Association ("AAA") then in effect. There shall be one arbitrator, and
+such arbitrator shall be chosen by mutual agreement of the parties in
+accordance with AAA rules. The arbitration shall take place in Granite
+Bay, California, and may be conducted by telephone or online. The
+arbitrator shall apply the laws of the State of California, USA to all
+issues in dispute. The controversy or claim shall be arbitrated on an
+individual basis, and shall not be consolidated in any arbitration
+with any claim or controversy of any other party. The findings of the
+arbitrator shall be final and binding on the parties, and may be
+entered in any court of competent jurisdiction for
+enforcement. Enforcements of any award or judgment shall be governed
+by the United Nations Convention on the Recognition and Enforcement of
+Foreign Arbitral Awards. Should either party file an action contrary
+to this provision, the other party may recover attorney's fees and
+costs up to $1000.00.
+
+23. U.S. Government End-Users. The Software is a "commercial item," as
+that term is defined in 48 C.F.R. 2.101 (Oct. 1995), consisting of
+"commercial computer software" and "commercial computer software
+documentation," as such terms are used in 48 C.F.R.  12.212
+(Sept. 1995). Consistent with 48 C.F.R. 12.212 and 48
+C.F.R. 227.7202-1 through 227.7202-4 (June 1995), all U.S. Government
+End Users acquire the Software with only those rights set forth
+herein.
+
+24. Jurisdiction And Venue.  The courts of Placer County in the State
+of California, USA and the nearest U.S. District Court shall be the
+exclusive jurisdiction and venue for all legal proceedings relating to
+this Agreement.
+
+25. Independent Contractors.  The relationship of the parties is that
+of independent contractor, and nothing herein shall be construed to
+create a partnership, joint venture, franchise, employment, or agency
+relationship between the parties.  Licensee shall have no authority to
+enter into agreements of any kind on behalf of CodeSourcery and shall
+not have the power or authority to bind or obligate CodeSourcery in
+any manner to any third party.
+
+26. Force Majeure.  Neither CodeSourcery nor Licensee shall be liable
+for damages for any delay or failure of delivery arising out of causes
+beyond their reasonable control and without their fault or negligence,
+including, but not limited to, Acts of God, acts of civil or military
+authority, fires, riots, wars, embargoes, or communications failures.
+
+27. Miscellaneous.  This Agreement constitutes the entire
+understanding of the parties with respect to the subject matter of
+this Agreement and merges all prior communications, representations,
+and agreements. This Agreement may be modified only by a written
+agreement signed by the parties.  If any provision of this Agreement
+is held to be unenforceable for any reason, such provision shall be
+reformed only to the extent necessary to make it enforceable.  This
+Agreement shall be construed under the laws of the State of
+California, USA, excluding rules regarding conflicts of law.  The
+application the United Nations Convention of Contracts for the
+International Sale of Goods is expressly excluded.  This license is
+written in English, and English is its controlling language.
+
+
+		    GNU GENERAL PUBLIC LICENSE
+		       Version 2, June 1991
+
+ Copyright (C) 1989, 1991 Free Software Foundation, Inc.
+     59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ Everyone is permitted to copy and distribute verbatim copies
+ of this license document, but changing it is not allowed.
+
+			    Preamble
+
+  The licenses for most software are designed to take away your
+freedom to share and change it.  By contrast, the GNU General Public
+License is intended to guarantee your freedom to share and change free
+software--to make sure the software is free for all its users.  This
+General Public License applies to most of the Free Software
+Foundation's software and to any other program whose authors commit to
+using it.  (Some other Free Software Foundation software is covered by
+the GNU Library General Public License instead.)  You can apply it to
+your programs, too.
+
+  When we speak of free software, we are referring to freedom, not
+price.  Our General Public Licenses are designed to make sure that you
+have the freedom to distribute copies of free software (and charge for
+this service if you wish), that you receive source code or can get it
+if you want it, that you can change the software or use pieces of it
+in new free programs; and that you know you can do these things.
+
+  To protect your rights, we need to make restrictions that forbid
+anyone to deny you these rights or to ask you to surrender the rights.
+These restrictions translate to certain responsibilities for you if you
+distribute copies of the software, or if you modify it.
+
+  For example, if you distribute copies of such a program, whether
+gratis or for a fee, you must give the recipients all the rights that
+you have.  You must make sure that they, too, receive or can get the
+source code.  And you must show them these terms so they know their
+rights.
+
+  We protect your rights with two steps: (1) copyright the software, and
+(2) offer you this license which gives you legal permission to copy,
+distribute and/or modify the software.
+
+  Also, for each author's protection and ours, we want to make certain
+that everyone understands that there is no warranty for this free
+software.  If the software is modified by someone else and passed on, we
+want its recipients to know that what they have is not the original, so
+that any problems introduced by others will not reflect on the original
+authors' reputations.
+
+  Finally, any free program is threatened constantly by software
+patents.  We wish to avoid the danger that redistributors of a free
+program will individually obtain patent licenses, in effect making the
+program proprietary.  To prevent this, we have made it clear that any
+patent must be licensed for everyone's free use or not licensed at all.
+
+  The precise terms and conditions for copying, distribution and
+modification follow.
+
+		    GNU GENERAL PUBLIC LICENSE
+   TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION
+
+  0. This License applies to any program or other work which contains
+a notice placed by the copyright holder saying it may be distributed
+under the terms of this General Public License.  The "Program", below,
+refers to any such program or work, and a "work based on the Program"
+means either the Program or any derivative work under copyright law:
+that is to say, a work containing the Program or a portion of it,
+either verbatim or with modifications and/or translated into another
+language.  (Hereinafter, translation is included without limitation in
+the term "modification".)  Each licensee is addressed as "you".
+
+Activities other than copying, distribution and modification are not
+covered by this License; they are outside its scope.  The act of
+running the Program is not restricted, and the output from the Program
+is covered only if its contents constitute a work based on the
+Program (independent of having been made by running the Program).
+Whether that is true depends on what the Program does.
+
+  1. You may copy and distribute verbatim copies of the Program's
+source code as you receive it, in any medium, provided that you
+conspicuously and appropriately publish on each copy an appropriate
+copyright notice and disclaimer of warranty; keep intact all the
+notices that refer to this License and to the absence of any warranty;
+and give any other recipients of the Program a copy of this License
+along with the Program.
+
+You may charge a fee for the physical act of transferring a copy, and
+you may at your option offer warranty protection in exchange for a fee.
+
+  2. You may modify your copy or copies of the Program or any portion
+of it, thus forming a work based on the Program, and copy and
+distribute such modifications or work under the terms of Section 1
+above, provided that you also meet all of these conditions:
+
+    a) You must cause the modified files to carry prominent notices
+    stating that you changed the files and the date of any change.
+
+    b) You must cause any work that you distribute or publish, that in
+    whole or in part contains or is derived from the Program or any
+    part thereof, to be licensed as a whole at no charge to all third
+    parties under the terms of this License.
+
+    c) If the modified program normally reads commands interactively
+    when run, you must cause it, when started running for such
+    interactive use in the most ordinary way, to print or display an
+    announcement including an appropriate copyright notice and a
+    notice that there is no warranty (or else, saying that you provide
+    a warranty) and that users may redistribute the program under
+    these conditions, and telling the user how to view a copy of this
+    License.  (Exception: if the Program itself is interactive but
+    does not normally print such an announcement, your work based on
+    the Program is not required to print an announcement.)
+
+These requirements apply to the modified work as a whole.  If
+identifiable sections of that work are not derived from the Program,
+and can be reasonably considered independent and separate works in
+themselves, then this License, and its terms, do not apply to those
+sections when you distribute them as separate works.  But when you
+distribute the same sections as part of a whole which is a work based
+on the Program, the distribution of the whole must be on the terms of
+this License, whose permissions for other licensees extend to the
+entire whole, and thus to each and every part regardless of who wrote it.
+
+Thus, it is not the intent of this section to claim rights or contest
+your rights to work written entirely by you; rather, the intent is to
+exercise the right to control the distribution of derivative or
+collective works based on the Program.
+
+In addition, mere aggregation of another work not based on the Program
+with the Program (or with a work based on the Program) on a volume of
+a storage or distribution medium does not bring the other work under
+the scope of this License.
+
+  3. You may copy and distribute the Program (or a work based on it,
+under Section 2) in object code or executable form under the terms of
+Sections 1 and 2 above provided that you also do one of the following:
+
+    a) Accompany it with the complete corresponding machine-readable
+    source code, which must be distributed under the terms of Sections
+    1 and 2 above on a medium customarily used for software interchange; or,
+
+    b) Accompany it with a written offer, valid for at least three
+    years, to give any third party, for a charge no more than your
+    cost of physically performing source distribution, a complete
+    machine-readable copy of the corresponding source code, to be
+    distributed under the terms of Sections 1 and 2 above on a medium
+    customarily used for software interchange; or,
+
+    c) Accompany it with the information you received as to the offer
+    to distribute corresponding source code.  (This alternative is
+    allowed only for noncommercial distribution and only if you
+    received the program in object code or executable form with such
+    an offer, in accord with Subsection b above.)
+
+The source code for a work means the preferred form of the work for
+making modifications to it.  For an executable work, complete source
+code means all the source code for all modules it contains, plus any
+associated interface definition files, plus the scripts used to
+control compilation and installation of the executable.  However, as a
+special exception, the source code distributed need not include
+anything that is normally distributed (in either source or binary
+form) with the major components (compiler, kernel, and so on) of the
+operating system on which the executable runs, unless that component
+itself accompanies the executable.
+
+If distribution of executable or object code is made by offering
+access to copy from a designated place, then offering equivalent
+access to copy the source code from the same place counts as
+distribution of the source code, even though third parties are not
+compelled to copy the source along with the object code.
+
+  4. You may not copy, modify, sublicense, or distribute the Program
+except as expressly provided under this License.  Any attempt
+otherwise to copy, modify, sublicense or distribute the Program is
+void, and will automatically terminate your rights under this License.
+However, parties who have received copies, or rights, from you under
+this License will not have their licenses terminated so long as such
+parties remain in full compliance.
+
+  5. You are not required to accept this License, since you have not
+signed it.  However, nothing else grants you permission to modify or
+distribute the Program or its derivative works.  These actions are
+prohibited by law if you do not accept this License.  Therefore, by
+modifying or distributing the Program (or any work based on the
+Program), you indicate your acceptance of this License to do so, and
+all its terms and conditions for copying, distributing or modifying
+the Program or works based on it.
+
+  6. Each time you redistribute the Program (or any work based on the
+Program), the recipient automatically receives a license from the
+original licensor to copy, distribute or modify the Program subject to
+these terms and conditions.  You may not impose any further
+restrictions on the recipients' exercise of the rights granted herein.
+You are not responsible for enforcing compliance by third parties to
+this License.
+
+  7. If, as a consequence of a court judgment or allegation of patent
+infringement or for any other reason (not limited to patent issues),
+conditions are imposed on you (whether by court order, agreement or
+otherwise) that contradict the conditions of this License, they do not
+excuse you from the conditions of this License.  If you cannot
+distribute so as to satisfy simultaneously your obligations under this
+License and any other pertinent obligations, then as a consequence you
+may not distribute the Program at all.  For example, if a patent
+license would not permit royalty-free redistribution of the Program by
+all those who receive copies directly or indirectly through you, then
+the only way you could satisfy both it and this License would be to
+refrain entirely from distribution of the Program.
+
+If any portion of this section is held invalid or unenforceable under
+any particular circumstance, the balance of the section is intended to
+apply and the section as a whole is intended to apply in other
+circumstances.
+
+It is not the purpose of this section to induce you to infringe any
+patents or other property right claims or to contest validity of any
+such claims; this section has the sole purpose of protecting the
+integrity of the free software distribution system, which is
+implemented by public license practices.  Many people have made
+generous contributions to the wide range of software distributed
+through that system in reliance on consistent application of that
+system; it is up to the author/donor to decide if he or she is willing
+to distribute software through any other system and a licensee cannot
+impose that choice.
+
+This section is intended to make thoroughly clear what is believed to
+be a consequence of the rest of this License.
+
+  8. If the distribution and/or use of the Program is restricted in
+certain countries either by patents or by copyrighted interfaces, the
+original copyright holder who places the Program under this License
+may add an explicit geographical distribution limitation excluding
+those countries, so that distribution is permitted only in or among
+countries not thus excluded.  In such case, this License incorporates
+the limitation as if written in the body of this License.
+
+  9. The Free Software Foundation may publish revised and/or new versions
+of the General Public License from time to time.  Such new versions will
+be similar in spirit to the present version, but may differ in detail to
+address new problems or concerns.
+
+Each version is given a distinguishing version number.  If the Program
+specifies a version number of this License which applies to it and "any
+later version", you have the option of following the terms and conditions
+either of that version or of any later version published by the Free
+Software Foundation.  If the Program does not specify a version number of
+this License, you may choose any version ever published by the Free Software
+Foundation.
+
+  10. If you wish to incorporate parts of the Program into other free
+programs whose distribution conditions are different, write to the author
+to ask for permission.  For software which is copyrighted by the Free
+Software Foundation, write to the Free Software Foundation; we sometimes
+make exceptions for this.  Our decision will be guided by the two goals
+of preserving the free status of all derivatives of our free software and
+of promoting the sharing and reuse of software generally.
+
+			    NO WARRANTY
+
+  11. BECAUSE THE PROGRAM IS LICENSED FREE OF CHARGE, THERE IS NO WARRANTY
+FOR THE PROGRAM, TO THE EXTENT PERMITTED BY APPLICABLE LAW.  EXCEPT WHEN
+OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES
+PROVIDE THE PROGRAM "AS IS" WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED
+OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  THE ENTIRE RISK AS
+TO THE QUALITY AND PERFORMANCE OF THE PROGRAM IS WITH YOU.  SHOULD THE
+PROGRAM PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL NECESSARY SERVICING,
+REPAIR OR CORRECTION.
+
+  12. IN NO EVENT UNLESS REQUIRED BY APPLICABLE LAW OR AGREED TO IN WRITING
+WILL ANY COPYRIGHT HOLDER, OR ANY OTHER PARTY WHO MAY MODIFY AND/OR
+REDISTRIBUTE THE PROGRAM AS PERMITTED ABOVE, BE LIABLE TO YOU FOR DAMAGES,
+INCLUDING ANY GENERAL, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES ARISING
+OUT OF THE USE OR INABILITY TO USE THE PROGRAM (INCLUDING BUT NOT LIMITED
+TO LOSS OF DATA OR DATA BEING RENDERED INACCURATE OR LOSSES SUSTAINED BY
+YOU OR THIRD PARTIES OR A FAILURE OF THE PROGRAM TO OPERATE WITH ANY OTHER
+PROGRAMS), EVEN IF SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE
+POSSIBILITY OF SUCH DAMAGES.
+
+		     END OF TERMS AND CONDITIONS
+
+   --- GPL
+
+	    How to Apply These Terms to Your New Programs
+
+  If you develop a new program, and you want it to be of the greatest
+possible use to the public, the best way to achieve this is to make it
+free software which everyone can redistribute and change under these terms.
+
+  To do so, attach the following notices to the program.  It is safest
+to attach them to the start of each source file to most effectively
+convey the exclusion of warranty; and each file should have at least
+the "copyright" line and a pointer to where the full notice is found.
+
+    <one line to give the program's name and a brief idea of what it does.>
+    Copyright (C) <year>  <name of author>
+
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+
+Also add information on how to contact you by electronic and paper mail.
+
+If the program is interactive, make it output a short notice like this
+when it starts in an interactive mode:
+
+    Gnomovision version 69, Copyright (C) year  name of author
+    Gnomovision comes with ABSOLUTELY NO WARRANTY; for details type `show w'.
+    This is free software, and you are welcome to redistribute it
+    under certain conditions; type `show c' for details.
+
+The hypothetical commands `show w' and `show c' should show the appropriate
+parts of the General Public License.  Of course, the commands you use may
+be called something other than `show w' and `show c'; they could even be
+mouse-clicks or menu items--whatever suits your program.
+
+You should also get your employer (if you work as a programmer) or your
+school, if any, to sign a "copyright disclaimer" for the program, if
+necessary.  Here is a sample; alter the names:
+
+  Yoyodyne, Inc., hereby disclaims all copyright interest in the program
+  `Gnomovision' (which makes passes at compilers) written by James Hacker.
+
+  <signature of Ty Coon>, 1 April 1989
+  Ty Coon, President of Vice
+
+This General Public License does not permit incorporating your program into
+proprietary programs.  If your program is a subroutine library, you may
+consider it more useful to permit linking proprietary applications with the
+library.  If this is what you want to do, use the GNU Library General
+Public License instead of this License.
+
+-------------------------------------------------------------------------
+
+CodeSourcery sells a commercial Sourcery VSIPL++ license for customers
+who are unable to release their application under the GPL.  For more
+information visit the CodeSourcery website: http://www.codesourcery.com/ 

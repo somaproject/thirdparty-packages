@@ -1,0 +1,12 @@
+<?xml version="1.0" ?>
+<!DOCTYPE class-directory
+  PUBLIC '-//QM/2.2/Class-Directory//EN'
+  'http://www.codesourcery.com/qm/dtds/2.2/-//qm/2.2/class-directory//en.dtd'>
+<class-directory>
+ <class kind="database" name="database.Database"/>
+ <class kind="database" name="vpp_database.VPPDatabase"/>
+ <class kind="test" name="vpp_database.VPPTest"/>
+ <class kind="resource" name="vpp_database.VPPResource"/>
+ <class kind="test" name="vpp_database.VPPCompTest"/>
+ <class kind="resource" name="vpp_database.ParallelService"/>
+</class-directory>

@@ -1,0 +1,129 @@
+#! /usr/bin/env bash
+
+########################################################################
+#
+# File:   src-release
+# Author: Jules Bergmann, Mark Mitchell 
+# Date:   2005-05-26
+#
+# Contents:
+#   Script to build Sourcery VSIPL++ release.
+#
+########################################################################
+
+########################################################################
+# Notes
+########################################################################
+
+# SYNOPSIS
+#   src-release
+#
+# DESCRIPTION
+#   This script builds a source release of Sourcery VSIPL++.  The generated
+#   release will be a file named "sourceryvsipl++-<date>.tar.bz2".  This
+#   script will create temporary directories called
+#   "sourceryvsipl++-<date>" and "sourceryvsipl++-objdir-<date>". 
+   
+########################################################################
+# Subroutines
+########################################################################
+
+# Issue an error message and exit.
+
+error() {
+    echo "src-release: $1" >& 2 
+    exit 1
+}
+
+# Check out the Sourcery VSIPL++ sources from CVS and build the configure 
+# scripts. 
+ 
+checkout() {
+    echo "Checking out Sourcery VSIPL++..."
+
+    # If $srcdir already exists, then we do not want to overwrite it.
+    if [ -d "$srcdir" ]; then
+	error "$srcdir already exists"
+    fi
+
+    # Check out the sources.
+    cvs -Q -d "$cvsroot" export -r "$cvstag" \
+	-d $(basename "$srcdir") "$cvsmodule"
+
+    # Build the configure script.
+    pushd "$srcdir" > /dev/null
+    ./autogen.sh
+    popd > /dev/null
+}
+
+# Build the documentation and copy it to the $srcdir.
+
+build_documentation() { 
+    echo "Building documentation..."
+
+    # If $objdir already exists, then we want this script to fail; we
+    # no way of knowing what sorts of detritus might occupy the
+    # existing directory.
+    mkdir "$objdir"
+    pushd "$objdir" > /dev/null
+    "$srcdir"/configure
+    make doc
+    find doc -name '*.pdf' | while read f; do
+	cp "$f" "$srcdir/$f"
+    done || return 1
+    find doc -name '*.html' | while read f; do
+	mkdir -p "$srcdir"/$(dirname "$f")
+	cp "$f" "$srcdir/$f"
+    done || return 1
+    popd > /dev/null
+}
+
+# Build the final release tarball.
+
+build_release() {
+    echo "Building release..."
+
+    tar cjf "$release" --owner=0 --group=0 $(basename "$srcdir") 
+}
+
+########################################################################
+# Initialization
+########################################################################
+
+# Any error in this script is fatal.
+set -e
+
+# The CVS server from which Sourcery VSIPL++ will be checked out.
+cvsroot=cvs.codesourcery.com:/home/cvs/Repository
+# The name of the Sourcery VSIPL++ CVS module.
+cvsmodule=vpp
+# The revision to be used for the release.
+cvstag="HEAD" 
+# The version of Sourcery VSIPL++ being built.
+version=$(date +%Y%m%d)
+
+########################################################################
+# Main Program
+########################################################################
+
+while getopts "v:" arg; do
+    case $arg in
+	v)
+	    version=$OPTARG
+	    ;;
+	\?)
+            error "usage: src-release [-v VERSION]"
+	    ;;
+    esac
+done
+
+# The absolute path to the source directory.
+srcdir="$(pwd)/sourceryvsipl++-$version"
+# The name of the directory in which we will build documentation.
+objdir="sourceryvsipl++-objdir-$version"
+# The name of the release tarball.
+release="sourceryvsipl++-$version.tar.bz2"
+
+checkout
+build_documentation
+build_release

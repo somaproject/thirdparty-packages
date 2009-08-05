@@ -1,0 +1,33 @@
+########################################################################
+#
+# File:   GNUmakefile.inc.in
+# Author: Stefan Seefeld
+# Date:   2006-09-20
+#
+# Contents: Makefile for VSIPL++ Python bindings
+#
+########################################################################
+
+scripting_CXXFLAGS := @BOOST_CPPFLAGS@ @PYTHON_CPP@
+scripting_LDFLAGS := @BOOST_LDFLAGS@
+scripting_LIBS := -Llib -lvsip_csl -lsvpp -lboost_python @PYTHON_LIBS@
+scripting_dir := lib/python/site-packages
+
+scripting_modules := _base math signal png
+scripting_sources := $(patsubst %, $(srcdir)/scripting/%.cpp, $(scripting_modules))
+scripting_targets := $(patsubst %, $(scripting_dir)/vsip/%$(PYTHON_EXT), \
+                       $(scripting_modules))
+cxx_sources += $(scripting_sources)
+
+vpath %.cpp $(srcdir)/scripting
+vpath %.py $(srcdir)/scripting
+
+all:: $(scripting_dir)/vsip/__init__.py $(scripting_targets)
+
+$(scripting_dir)/vsip/%$(PYTHON_EXT): scripting/%.$(OBJEXT)
+	$(link_dso)
+
+$(scripting_dir)/vsip/__init__.py: __init__.py
+	@echo copying $(@F)
+	cp $< $@
+

@@ -1,0 +1,168 @@
+######################################################### -*-Makefile-*-
+#
+# File:   GNUmakefile.inc
+# Author: Mark Mitchell 
+# Date:   2005-01-20
+#
+# Contents: Makefile fragment for src/vsip.
+#
+########################################################################
+
+########################################################################
+# Variables
+########################################################################
+
+src_vsip_CXXINCLUDES := -I$(srcdir)/src
+src_vsip_CXXFLAGS := $(src_vsip_CXXINCLUDES)
+
+src_vsip_cxx_sources := $(wildcard $(srcdir)/src/vsip/*.cpp)
+src_vsip_cxx_sources += $(wildcard $(srcdir)/src/vsip/core/*.cpp)
+src_vsip_cxx_sources += $(wildcard $(srcdir)/src/vsip/core/parallel/*.cpp)
+src_vsip_cxx_sources += $(wildcard $(srcdir)/src/vsip/core/signal/*.cpp)
+ifdef VSIP_IMPL_CVSIP_FFT
+src_vsip_cxx_sources += $(srcdir)/src/vsip/core/cvsip/fft.cpp
+endif
+
+ifndef VSIP_IMPL_REF_IMPL
+src_vsip_cxx_sources += $(wildcard $(srcdir)/src/vsip/core/expr/*.cpp)
+src_vsip_cxx_sources += $(wildcard $(srcdir)/src/vsip/opt/*.cpp)
+ifndef VSIP_IMPL_HAVE_NUMA
+src_vsip_cxx_sources := $(filter-out %/numa.cpp, $(src_vsip_cxx_sources))
+endif
+ifdef VSIP_IMPL_HAVE_CUDA
+src_vsip_cxx_sources += $(srcdir)/src/vsip/opt/cuda/bindings.cpp \
+                        $(srcdir)/src/vsip/opt/cuda/fastconv.cpp
+endif
+ifdef VSIP_IMPL_HAVE_IPP
+src_vsip_cxx_sources += $(srcdir)/src/vsip/opt/ipp/fir.cpp
+src_vsip_cxx_sources += $(srcdir)/src/vsip/opt/ipp/bindings.cpp
+endif
+ifdef VSIP_IMPL_HAVE_SAL
+src_vsip_cxx_sources += $(srcdir)/src/vsip/opt/sal/bindings.cpp
+endif
+ifdef VSIP_IMPL_SAL_FFT
+src_vsip_cxx_sources += $(srcdir)/src/vsip/opt/sal/fft.cpp
+endif
+ifdef VSIP_IMPL_IPP_FFT
+src_vsip_cxx_sources += $(srcdir)/src/vsip/opt/ipp/fft.cpp
+endif
+ifdef VSIP_IMPL_FFTW3
+src_vsip_cxx_sources += $(srcdir)/src/vsip/opt/fftw3/fft.cpp
+endif
+ifdef VSIP_IMPL_CUDA_FFT
+src_vsip_cxx_sources += $(srcdir)/src/vsip/opt/cuda/fft.cpp
+endif
+ifdef VSIP_IMPL_HAVE_CBE_SDK
+src_vsip_cxx_sources += $(srcdir)/src/vsip/opt/cbe/ppu/alf.cpp \
+                        $(srcdir)/src/vsip/opt/cbe/ppu/task_manager.cpp \
+                        $(srcdir)/src/vsip/opt/cbe/ppu/fastconv.cpp \
+                        $(srcdir)/src/vsip/opt/cbe/ppu/bindings.cpp \
+                        $(srcdir)/src/vsip/opt/cbe/ppu/plugin.cpp \
+                        $(srcdir)/src/vsip/opt/cbe/ppu/pwarp.cpp
+endif
+ifdef VSIP_IMPL_CBE_SDK_FFT
+src_vsip_cxx_sources += $(srcdir)/src/vsip/opt/cbe/ppu/fft.cpp
+endif
+src_vsip_cxx_sources += $(srcdir)/src/vsip/opt/simd/vmul.cpp \
+			$(srcdir)/src/vsip/opt/simd/rscvmul.cpp \
+			$(srcdir)/src/vsip/opt/simd/vadd.cpp \
+			$(srcdir)/src/vsip/opt/simd/vgt.cpp \
+			$(srcdir)/src/vsip/opt/simd/vlogic.cpp \
+			$(srcdir)/src/vsip/opt/simd/threshold.cpp \
+			$(srcdir)/src/vsip/opt/simd/vaxpy.cpp \
+			$(srcdir)/src/vsip/opt/simd/vma_ip_csc.cpp
+ifndef VSIP_IMPL_HAVE_HUGE_PAGE_POOL
+src_vsip_cxx_sources := $(filter-out %/huge_page_pool.cpp, $(src_vsip_cxx_sources))
+
+endif
+endif # VSIP_IMPL_REF_IMPL
+
+src_vsip_cxx_objects := $(patsubst $(srcdir)/%.cpp, %.$(OBJEXT), $(src_vsip_cxx_sources))
+
+cxx_sources += $(src_vsip_cxx_sources)
+
+ifeq ($(VSIP_IMPL_HAVE_CBE_SDK),1)
+-include src/vsip/opt/cbe/spu/GNUmakefile.inc
+endif
+
+ifeq ($(VSIP_IMPL_HAVE_CUDA),1)
+-include src/vsip/opt/cuda/GNUmakefile.inc
+endif
+
+libs += lib/libsvpp.$(LIBEXT)
+
+ifdef BUILD_SHARED_LIBS
+libs += lib/libsvpp.so
+lib_svpp := lib/libsvpp.so
+else
+lib_svpp := lib/libsvpp.$(LIBEXT)
+endif
+
+########################################################################
+# Rules
+########################################################################
+
+lib/libsvpp.$(LIBEXT): $(src_vsip_cxx_objects)
+	$(archive)
+
+install-core:: lib/libsvpp.$(LIBEXT)
+	$(INSTALL) -d $(DESTDIR)$(libdir)
+	$(INSTALL_DATA) lib/libsvpp.$(LIBEXT) \
+          $(DESTDIR)$(libdir)/libsvpp$(suffix).$(LIBEXT)
+
+ifdef BUILD_SHARED_LIBS
+lib/libsvpp.so: $(src_vsip_cxx_objects)
+	$(link_lib_dso)
+
+install-core:: lib/libsvpp.so
+	$(INSTALL) -d $(DESTDIR)$(libdir)
+	$(INSTALL_DATA) lib/libsvpp.so \
+          $(DESTDIR)$(libdir)/libsvpp$(suffix).so
+endif
+
+# Install the SV++ header files.  When building with
+# separate $objdir, acconfig.hpp will be generated in the $objdir, so it
+# must be copied explicitly.  By copying it last, we override any
+# stale copy in the $srcdir.
+install-svxx:: install-core
+	$(INSTALL) -d $(DESTDIR)$(includedir)/vsip/core
+	$(INSTALL) -d $(DESTDIR)$(includedir)/vsip/core/expr
+	$(INSTALL) -d $(DESTDIR)$(includedir)/vsip/core/fft
+	$(INSTALL) -d $(DESTDIR)$(includedir)/vsip/core/mpi
+	$(INSTALL) -d $(DESTDIR)$(includedir)/vsip/core/parallel
+	$(INSTALL) -d $(DESTDIR)$(includedir)/vsip/core/reductions
+	$(INSTALL) -d $(DESTDIR)$(includedir)/vsip/core/signal
+	$(INSTALL) -d $(DESTDIR)$(includedir)/vsip/core/solver
+	$(INSTALL) -d $(DESTDIR)$(includedir)/vsip/core/cvsip
+ifndef VSIP_IMPL_REF_IMPL
+	$(INSTALL) -d $(DESTDIR)$(includedir)/vsip/opt
+	$(INSTALL) -d $(DESTDIR)$(includedir)/vsip/opt/cuda
+	$(INSTALL) -d $(DESTDIR)$(includedir)/vsip/opt/diag
+	$(INSTALL) -d $(DESTDIR)$(includedir)/vsip/opt/expr
+	$(INSTALL) -d $(DESTDIR)$(includedir)/vsip/opt/fft
+	$(INSTALL) -d $(DESTDIR)$(includedir)/vsip/opt/fftw3
+	$(INSTALL) -d $(DESTDIR)$(includedir)/vsip/opt/ipp
+	$(INSTALL) -d $(DESTDIR)$(includedir)/vsip/opt/lapack
+	$(INSTALL) -d $(DESTDIR)$(includedir)/vsip/opt/parallel
+	$(INSTALL) -d $(DESTDIR)$(includedir)/vsip/opt/pas
+	$(INSTALL) -d $(DESTDIR)$(includedir)/vsip/opt/reductions
+	$(INSTALL) -d $(DESTDIR)$(includedir)/vsip/opt/sal
+	$(INSTALL) -d $(DESTDIR)$(includedir)/vsip/opt/signal
+	$(INSTALL) -d $(DESTDIR)$(includedir)/vsip/opt/simd
+	$(INSTALL) -d $(DESTDIR)$(includedir)/vsip/opt/reductions
+ifdef VSIP_IMPL_HAVE_CBE_SDK
+	$(INSTALL) -d $(DESTDIR)$(includedir)/vsip/opt/cbe
+	$(INSTALL) -d $(DESTDIR)$(includedir)/vsip/opt/cbe/ppu
+	$(INSTALL) -d $(DESTDIR)$(includedir)/vsip/opt/cbe/spu
+	$(INSTALL) -d $(DESTDIR)$(includedir)/vsip/opt/cbe/cml
+	$(INSTALL) -d $(DESTDIR)$(includedir)/vsip/opt/ukernel
+	$(INSTALL) -d $(DESTDIR)$(includedir)/vsip/opt/ukernel/cbe_accel
+	$(INSTALL) -d $(DESTDIR)$(includedir)/vsip/opt/ukernel/kernels/host
+	$(INSTALL) -d $(DESTDIR)$(includedir)/vsip/opt/ukernel/kernels/params
+endif
+endif
+	for header in $(hdr); do \
+          $(INSTALL_DATA) $(srcdir)/src/$$header \
+            $(DESTDIR)$(includedir)/`dirname $$header`; \
+	done
+	$(INSTALL_DATA) src/vsip/core/acconfig.hpp $(DESTDIR)$(includedir)/vsip/core

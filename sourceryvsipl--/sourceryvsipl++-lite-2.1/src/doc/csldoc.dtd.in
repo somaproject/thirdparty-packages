@@ -1,0 +1,60 @@
+<!-- ...................................................................... -->
+<!-- Generic CSL documentation DTD .............................................. -->
+<!-- File csldoc.dtd ............................................. -->
+
+ <!-- Include required public standards -->
+ <!-- Whether we should include the standard last or first is up 
+      for debate. First definitions are always the valid definitions.
+      If we plan to override docbookx.dtd elements, then this inclusion
+      order may have to change. -->
+ <!ENTITY % docbookx.dtd PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
+        "http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd">
+ %docbookx.dtd;
+
+ <!-- Enable xi:include -->
+ <!ELEMENT xi:include (xi:fallback?)>
+ <!ATTLIST xi:include
+    xmlns:xi        CDATA       #FIXED    "http://www.w3.org/2001/XInclude"
+    href            CDATA       #IMPLIED
+    parse           (xml|text)  "xml"
+    xpointer        CDATA       #IMPLIED
+    encoding        CDATA       #IMPLIED
+    accept          CDATA       #IMPLIED
+    accept-language CDATA       #IMPLIED
+ >
+ <!ELEMENT xi:fallback ANY>
+ <!ATTLIST xi:fallback
+    xmlns:xi   CDATA   #FIXED   "http://www.w3.org/2001/XInclude"
+ >
+
+ <!-- Standard fragments -->
+
+ <!-- These entities are provided by the build script -->
+ <!-- All CSL entities begin with csl_ -->
+ <!ENTITY csl_dbf "@csl_docbook_prefix@/fragments">
+
+ <!ENTITY csl_target "@target_alias@">
+ <!ENTITY csl_target_arch "@target_cpu@">
+ <!ENTITY csl_target_arch_name "@target_arch_name@">
+ <!ENTITY csl_target_os_name "@target_os_name@">
+ <!ENTITY csl_target_name "@target_arch_name@ @target_os_name@">
+ <!ENTITY csl_version_string "@version_string@">
+ <!ENTITY csl_major_version_string "@major_version_string@">
+ <!ENTITY csl_pkgversion "@pkgversion@">
+ <!ENTITY csl_release_config "@release_config@">
+
+ <!ENTITY csl_sales "<email>sales@codesourcery.com</email>">
+ <!ENTITY csl_support "<email>support@codesourcery.com</email>">
+ <!-- Product homepage -->
+ <!ENTITY csl_svxx_homepage 
+  "<ulink url=&#34;http://www.codesourcery.com/vsiplplusplus/&#34;
+    >Sourcery VSIPL++ web site</ulink>">
+ <!ENTITY csl_svxx_support_url
+  "<ulink url=&#34;https://support.codesourcery.com/VSIPL++/&#34;
+    >Sourcery VSIPL++ Portal</ulink>">
+ <!-- Shorthand for the product name -->
+ <!ENTITY csl_prod "@product_name@">
+ <!ENTITY csl_svxx "Sourcery VSIPL++">
+ <!ENTITY csl_svxx_file "sourceryvsipl++">
+ <!ENTITY csl_comp "CodeSourcery">
+

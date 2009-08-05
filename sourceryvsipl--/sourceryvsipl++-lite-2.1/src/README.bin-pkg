@@ -1,0 +1,89 @@
+README for Sourcery VSIPL++ Binary Packages
+-------------------------------------------
+
+Sourcery VSIPL++ is a high-quality implementation of the VSIPL++ API,
+developed by CodeSourcery, LLC.
+
+This software has been released under the GNU Public License (GPL).
+For more details, see the COPYRIGHT file.
+
+Sourcery VSIPL++ binary packages are pre-compiled for specific
+systems and architectures.  They make it fast and easy to get
+started using VSIPL++.
+
+For detailed instructions on installing Sourcery VSIPL++ binary
+packages, please consult the instructions in doc/quickstart/quickstart.pdf.
+
+However, for the impatient, it is possible to this Sourcery VSIPL++
+binary package in /usr/local by:
+
+	cd /
+	tar xfj sourceryvsipl++-<package_name>.tar.bz2
+
+To use this installation, put /usr/local/lib/pkgconfig
+into your PKG_CONFIG_PATH:
+
+	export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig
+
+See /usr/local/share/sourceryvsipl++/example for an example
+program and Makefile.
+
+It is also possible to install the binary package in another location.
+Please consult doc/quickstart/quickstart.pdf for more details.
+
+For more information, please visit CodeSourcery's VSIPL++ website
+(www.codesourcery.com/vsiplplusplus).  There you can download the
+latest versions of Sourcery VSIPL++, find documentation on VSIPL++,
+report bugs in Sourcery VSIPL++, and find out about commercial support
+that CodeSourcery offers for VSIPL++.
+
+Thank you, we hope you enjoy using Sourcery VSIPL++!
+
+			-- The Sourcery VSIPL++ team at CodeSourcery.
+
+
+
+RELEASE NOTES for Sourcery VSIPL++ 1.0 Binary Packages
+------------------------------------------------------
+
+The binary packages are built for Red Hat Enterprise Linux version 4.0,
+However, they should work with other GNU/Linux distributions that
+provide the following packages:
+
+	* GCC 3.4
+
+(Sourcery G++ provides binary packages for GCC 3.4.  They can be
+downloaded from www.codesourcery.com/gnu_toolchains).
+
+
+The 32-bit binary packages using built-in math libraries
+(sourceryvsipl++-{serial,parallel}-builtin-i686.tar.bz2) require the
+following architectural features:
+
+	* SSE2 instruction set.
+
+The 64-bit binary packages using built-in math libraries
+(sourceryvsipl++-{serial,parallel}-builtin-{em64t,amd64}.tar.bz2)
+are targeted to the specific Intel EM64T and AMD Opteron AMD64
+architectures.
+
+Using these binary packages on processors not implementing these
+features may result in illegal instruction errors.
+
+
+The binary packages using the Intel math libraries
+(sourceryvsipl++-{ser,par}-intel-*.tar.bz2) are built for the
+following library versions, installed at the locations in
+parenthesis:
+
+	* IPP 4.1  (/opt/intel/ipp)
+	* MKL 7.21 (/opt/intel/mkl)
+
+Using these binary packages with IPP or MKL installed at other locations
+is possible:
+
+ 1) Edit the Sourcery VSIPL++ pkg-config files (lib/pkgconfig/vsipl++.pc
+    and lib/pkgconfig/vsipl++-debug.pc) to refer to the installed locations,
+    or
+ 2) Create symbolic links from /opt/intel/ipp and /opt/intel/mkl to
+    the installed locations.

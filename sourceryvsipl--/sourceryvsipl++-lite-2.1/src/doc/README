@@ -1,0 +1,49 @@
+Introduction
+============
+
+  Manuals for VSIPL++Pro are written using DocBook.  For more
+  information about DocBook, see:
+
+    http://www.docbook.org
+
+  The DocBook input is processed with OpenJade to generate documentation
+  in both HTML and PDF formats.
+
+Organization
+============
+
+  Each manual is placed in its own subdirectory of "doc".  Fragments
+  that are common to all manuals are placed in "doc/include".
+
+  Docbook stylesheets are placed directly in "doc".
+
+Conventions
+===========
+
+  Pronouns
+  --------
+   
+  The user is referred to as "you".  The first person ("I" or "we") is
+  never used; refer to CodeSourcery as "CodeSourcery".
+ 
+  Indentation
+  -----------
+  
+  Nested elements are indented one column from their containing
+  elements.
+
+  FIXMEs
+  ------
+
+  If you must check in documentation that is incomplete or incorrect,
+  please mark the areas that need to be fixed with a <note> whose
+  <title> is "FIXME".  For example:
+
+    <note>
+     <title>FIXME</title>
+     <para>An example is needed here.</para>
+    </note>
+
+  Adoping this convention uniformly makes it easier to search for
+  places that require fixing.
+

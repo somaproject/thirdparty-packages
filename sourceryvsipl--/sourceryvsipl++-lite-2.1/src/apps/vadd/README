@@ -1,0 +1,40 @@
+=============================================================================
+Simple Parallel Application: Vector Addition
+Copyright (c) 2009 by CodeSourcery.  All rights reserved.
+
+This file is available for license from CodeSourcery, Inc. under the terms
+of a commercial license and under the GPL.  It is not part of the VSIPL++
+reference implementation and is not available under the BSD license.
+=============================================================================
+
+This directory contains the implementation of a simple application that
+demonstrates some of VSIPL++'s basic facilities for building parallel
+programs.
+
+In brief, the application adds two vectors and writes the result in a
+third vector.
+
+Run the benchmark or execute other functions by specifying the any one of 
+the following commands:
+
+  make		Build the benchmark
+
+  make clean	Remove temporary files.
+
+  make check	Run the benchmark
+
+  make [ NP=np ] [ N=n ] profile
+		Use the built-in profiling capabilities of the library
+		to investigate application timing.  N defines the length
+		of the vectors, default 1024; NP defines the number of
+		processors, default 1.
+		
+Notes
+
+  The makefile is set up to automatically determine the location
+  of the installed Sourcery VSIPL++ using 'pkg-config'.  Depending
+  on the method of installation, this may just work, or you may
+  need to set the value of 'suffix', either in the makefile or
+  on the command line, in order to select the desired version
+  of the library.  Refer to the makefile and to the Quickstart
+  guide for details.

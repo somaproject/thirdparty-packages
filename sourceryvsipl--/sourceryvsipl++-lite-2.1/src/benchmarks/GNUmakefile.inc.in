@@ -1,0 +1,132 @@
+######################################################### -*-Makefile-*-
+#
+# File:   GNUmakefile.inc
+# Author: Mark Mitchell 
+# Date:   2005-01-20
+#
+# Contents: Makefile fragment for benchmarks.
+#
+########################################################################
+
+# Files in this directory are not available under the BSD license, so
+# avoid putting them into cxx_sources, building them, installing them,
+# etc. when building the reference implementation.
+ifndef VSIP_IMPL_REF_IMPL
+
+########################################################################
+# Variables
+########################################################################
+
+benchmarks_CXXINCLUDES := -I$(srcdir)/src -I$(srcdir)/tests	\
+			  -I$(srcdir)/benchmarks
+benchmarks_CXXFLAGS := $(benchmarks_CXXINCLUDES)
+benchmarks_lapack_CXXFLAGS := $(benchmarks_CXXINCLUDES)
+benchmarks_ipp_CXXFLAGS := $(benchmarks_CXXINCLUDES)
+benchmarks_sal_CXXFLAGS := $(benchmarks_CXXINCLUDES)
+benchmarks_fftw3_CXXFLAGS := $(benchmarks_CXXINCLUDES)
+benchmarks_mpi_CXXFLAGS := $(benchmarks_CXXINCLUDES)
+benchmarks_cell_CXXFLAGS := $(benchmarks_CXXINCLUDES)
+benchmarks_cuda_CXXFLAGS := $(benchmarks_CXXINCLUDES)
+
+benchmarks_cxx_sources := $(wildcard $(srcdir)/benchmarks/*.cpp)
+benchmarks_cxx_headers := $(wildcard $(srcdir)/benchmarks/*.hpp)
+ifdef VSIP_IMPL_HAVE_LAPACK
+benchmarks_cxx_sources += $(wildcard $(srcdir)/benchmarks/lapack/*.cpp)
+benchmarks_cxx_headers += $(wildcard $(srcdir)/benchmarks/lapack/*.hpp)
+endif
+ifdef VSIP_IMPL_HAVE_IPP
+benchmarks_cxx_sources += $(wildcard $(srcdir)/benchmarks/ipp/*.cpp) 
+benchmarks_cxx_header += $(wildcard $(srcdir)/benchmarks/ipp/*.hpp) 
+endif
+ifdef VSIP_IMPL_HAVE_SAL
+benchmarks_cxx_sources += $(wildcard $(srcdir)/benchmarks/sal/*.cpp) 
+benchmarks_cxx_headers += $(wildcard $(srcdir)/benchmarks/sal/*.hpp) 
+endif
+ifdef VSIP_IMPL_FFTW3
+benchmarks_cxx_sources += $(wildcard $(srcdir)/benchmarks/fftw3/*.cpp) 
+benchmarks_cxx_headers += $(wildcard $(srcdir)/benchmarks/fftw3/*.hpp) 
+endif
+ifdef VSIP_IMPL_HAVE_MPI
+benchmarks_cxx_sources += $(wildcard $(srcdir)/benchmarks/mpi/*.cpp) 
+benchmarks_cxx_headers += $(wildcard $(srcdir)/benchmarks/mpi/*.hpp) 
+endif
+ifdef VSIP_IMPL_HAVE_CBE_SDK
+benchmarks_cxx_sources += $(wildcard $(srcdir)/benchmarks/cell/*.cpp) 
+benchmarks_cxx_headers += $(wildcard $(srcdir)/benchmarks/cell/*.hpp) 
+endif
+ifdef VSIP_IMPL_HAVE_CUDA
+benchmarks_cxx_sources += $(wildcard $(srcdir)/benchmarks/cuda/*.cpp) 
+benchmarks_cxx_headers += $(wildcard $(srcdir)/benchmarks/cuda/*.hpp) 
+endif
+
+benchmarks_obj := $(patsubst $(srcdir)/%.cpp, %.$(OBJEXT), $(benchmarks_cxx_sources))
+benchmarks_exe := $(patsubst $(srcdir)/%.cpp, %$(EXEEXT), $(benchmarks_cxx_sources))
+benchmarks_targets := $(filter-out benchmarks/main$(EXEEXT), $(benchmarks_exe)) 
+
+cxx_sources += $(benchmarks_cxx_sources)
+
+benchmarks_install_sources := $(benchmarks_cxx_sources) $(benchmarks_cxx_headers)
+
+benchmarks_install_targets := $(patsubst $(srcdir)/%, %, $(benchmarks_install_sources))
+
+benchmarks_static_targets := $(patsubst %$(EXEEXT), \
+                               %.static$(EXEEXT), \
+                               $(benchmarks_targets))
+
+benchmarks_prof_obj := $(patsubst $(srcdir)/%.cpp, %.prof.$(OBJEXT), $(benchmarks_cxx_sources))
+
+benchmarks_prof_targets := $(patsubst %$(EXEEXT), \
+                               %.prof$(EXEEXT), \
+                               $(benchmarks_targets))
+
+
+########################################################################
+# Rules
+########################################################################
+
+benchmarks:: $(benchmarks_targets)
+
+# Object files will be deleted by the parent clean rule.
+clean::
+	rm -f $(benchmarks_targets) $(benchmarks_static_targets)
+
+# Install benchmark source code and executables
+install-benchmarks:: benchmarks
+	$(INSTALL) -d $(DESTDIR)$(pkgdatadir)/benchmarks
+	$(INSTALL) -d $(DESTDIR)$(pkgdatadir)/benchmarks/lapack
+	$(INSTALL) -d $(DESTDIR)$(pkgdatadir)/benchmarks/ipp
+	$(INSTALL) -d $(DESTDIR)$(pkgdatadir)/benchmarks/sal
+	$(INSTALL) -d $(DESTDIR)$(pkgdatadir)/benchmarks/fftw3
+	$(INSTALL) -d $(DESTDIR)$(pkgdatadir)/benchmarks/mpi
+	$(INSTALL) -d $(DESTDIR)$(pkgdatadir)/benchmarks/cell
+	$(INSTALL) -d $(DESTDIR)$(pkgdatadir)/benchmarks/cuda
+	$(INSTALL_DATA) benchmarks/makefile.standalone \
+	  $(DESTDIR)$(pkgdatadir)/benchmarks/Makefile
+	for sourcefile in $(benchmarks_install_targets); do \
+          $(INSTALL_DATA) $(srcdir)/$$sourcefile $(DESTDIR)$(pkgdatadir)/`dirname $$sourcefile`; \
+	done
+	$(INSTALL) -d $(DESTDIR)$(benchmarks_exec_prefix)/benchmarks
+	$(INSTALL) -d $(DESTDIR)$(benchmarks_exec_prefix)/benchmarks/lapack
+	$(INSTALL) -d $(DESTDIR)$(benchmarks_exec_prefix)/benchmarks/ipp
+	$(INSTALL) -d $(DESTDIR)$(benchmarks_exec_prefix)/benchmarks/sal
+	$(INSTALL) -d $(DESTDIR)$(benchmarks_exec_prefix)/benchmarks/fftw3
+	$(INSTALL) -d $(DESTDIR)$(benchmarks_exec_prefix)/benchmarks/mpi
+	$(INSTALL) -d $(DESTDIR)$(benchmarks_exec_prefix)/benchmarks/cell
+	$(INSTALL) -d $(DESTDIR)$(benchmarks_exec_prefix)/benchmarks/cuda
+	for binfile in $(benchmarks_targets); do \
+	  $(INSTALL) $$binfile $(DESTDIR)$(benchmarks_exec_prefix)/`dirname $$binfile`; \
+	done
+
+$(benchmarks_targets): %$(EXEEXT) : %.$(OBJEXT) benchmarks/main.$(OBJEXT) $(lib_svpp)
+	$(link_benchmark)
+
+$(benchmarks_static_targets): %.static$(EXEEXT) : %.$(OBJEXT) benchmarks/main.$(OBJEXT) $(libs)
+	$(CXX) -static $(LDFLAGS) -o $@ $^ -Llib -lsvpp $(LIBS) || rm -f $@
+
+$(benchmarks_prof_obj): %.prof.$(OBJEXT): %.cpp
+	$(CXX) -c $(CXXFLAGS) $(call dir_var,$(dir $<),CXXFLAGS) -DVSIP_IMPL_PROFILER=15 -o $@ $<
+
+$(benchmarks_prof_targets): %.prof$(EXEEXT) : %.prof.$(OBJEXT) benchmarks/main.$(OBJEXT) $(libs)
+	$(link_app)
+
+endif # VSIP_IMPL_REF_IMPL

@@ -1,0 +1,275 @@
+Release notes for Sourcery VSIPL++ with support for Mercury MCOE
+
+This is a release 1.1 of Sourcery VSIPL++ with support for Mercury systems,
+using the GreenHills C++ compiler and Verari MPI/Pro.
+
+This is a source package.  Before using it, you will need to configure,
+build, and install it on your system.  Please read the "Installation"
+chapter (2) in the quickstart.  In particular, the "Configuration
+Notes for Mercury Systems" section (chapter 2 section 3.1) describes
+our recommendations on how to configure Sourcery VSIPL++ for Mercury
+systems.
+
+In short:
+
+1. Unpack the source package::
+
+	> tar xfj sourceryvsipl++-1.1.tar.bz2
+
+2. Configure the source package
+
+   (The file "examples/mercury/mcoe-setup.sh" uses the options recommended
+   from chapter 2 section 3.1).
+
+	> cd sourceryvsipl++-1.1
+	> cp examples/mercury/mcoe-setup.sh .
+	> vi mcoe-setup.sh
+	... Edit file to suit your system/environment:
+	...   set 'prefix' to desired installation location
+	...   set 'comm' to either 'ser'ial or 'par'allel
+	...   set 'opt' to 'y' for optimization, 'n' for debugging
+	...   set 'pflags' for your architecture
+	...   ('dir' is fine for building in source)
+	> sh mcoe-setup.sh
+
+   Check for warnings and error messages.
+
+3. Make the library
+
+	> make
+
+4. Install the library
+
+	> make install
+
+5. Setup your environment for pkg-config
+
+   Sourcery VSIPL++ uses the pkg-config tool to provide information on
+   include directory locations, library directory locations, required
+   libraries, and compiler options.
+
+   If you are using pkg-config, you will need to add the directory
+   '$prefix/lib/pkgconfig' to the environment variable PKG_CONFIG_PATH
+   (where $prefix is the installation prefix specified in step #2).
+
+	export PKG_CONFIG_PATH=/opt/sourcery-vsipl++/lib/pkgconfig
+
+   Now you should be able to use the pkg-config command to query
+   build parameters.  For example:
+
+	> pkg-config vsipl++ --libs
+	-t ppc7400_le -L -L/opt/sourcery-vsipl++/lib -lvsip -lmpipro
+
+   If you are not using pkg-config, you can determine the corresponding
+   parameters by looking at the file
+
+	$prefix/lib/pkgconfig/vsipl++.pc
+
+   It will look something like:
+
+	prefix=/opt/tmp/jules/opt/par-inter-060307
+	exec_prefix=${prefix}
+	libdir=${exec_prefix}/lib
+	includedir=${prefix}/include
+	cxx=ccmc++
+	cppflags=-I${includedir}
+	cxxflags=-t ppc7400_le --no_exceptions --no_implicit_include     -Ospeed -Onotailrecursion --max_inlining -DNDEBUG --diag_suppress 177,550
+	ldflags=-t ppc7400_le -L
+	par_service=mpipro
+
+	Name: Sourcery VSIPL++
+	Description: CodeSourcery VSIPL++ library
+	Version: 1.1
+	Libs: ${ldflags} -L${libdir} -lvsip   -lmpipro
+	Cflags: ${cppflags}
+
+   The variables ${cppflags} and ${cxxflags} should be used for compilation,
+   the variable ${Libs} should be used for linking.
+
+   Please also refer to chapter 3 of the Quickstart "Building Applications"
+   for details on using pkg-config, make, and building manually.
+   
+
+5. Run tests
+
+   The library comes with a test-suite that validates its operation.
+   The tests are located in the 'tests' subdirectory of source package.
+   They can be run with a makefile called 'make.standalone'.
+
+
+   If you are using pkg-config, you can run the tests by::
+
+	> cd tests
+	> make -f make.standalone REMOTE=run1.sh
+
+   where 'run1.sh' is a script (not provided) that runs a program on your
+   multi-computer.
+
+   For example, we use the following script to run parallel programs
+   using 1 processor (i.e. if the library was configured to use MPI/Pro):
+
+	#! /bin/sh
+
+	ce=3
+
+	heap=0x4000000	# 64 MB
+	stack=0x200000	#  2 MB
+
+	msti_opt="-msti_size 1 -msti_rank 0 -msti_lic_key ...""
+
+	sysmc -ce $ce -bcs=0 init
+	runmc -ce $ce -s $stack -h $heap  $* $msti_opt
+	ret=$?
+	sysmc -ce $ce reset
+
+	exit $ret
+
+   Each test will result in a 'PASS' or 'FAIL' message.
+
+   Note that some compilation warnings may be issued by the compiler
+   when compiling the library with optimization (in particular with
+   the -DNDEBUG option).  These are expected.
+
+
+   You can also run a single test by specifying a make target
+   'xyz.test'.  For example:
+
+	> make -f make.standalone REMOTE=run1.sh appmap.test
+
+
+   If you are not using pkg-config, you will need to edit 
+   the 'CXX', 'CXXFLAGS', and 'LIBS' variables in make.standalone.
+
+    - CXX should be your compiler (ccmc++)
+    - CXXFLAGS should be your compilation flags (the combination of
+      $cxxflags and $cppflags variables from the vsipl++.pc file
+      described above)
+    - LIBS should be your linker flags (the expansion of the Libs:
+      line from the vsipl++.pc file described above).
+
+   If you have trouble setting these flags, please let us know
+   and we will try to help.
+
+
+5b. Run paralllel tests
+
+   Tests in the tests/parallel directory exercise parallel
+   functionality:
+
+	parallel/block.cpp
+	parallel/getput.cpp
+	parallel/user-storage.cpp
+	parallel/expr.cpp
+	parallel/reductions-bool.cpp
+	parallel/reductions.cpp
+	parallel/reductions-idx.cpp
+	parallel/vmmul.cpp
+	parallel/fftm.cpp
+
+   This can be done manually:
+
+	# start in the tests directory
+	> cd $srcdir/tests
+
+	# build the executable, but don't run it
+	> make -f make.standalone parallel/getput.exe
+
+	# steps to run a parallel MPI/Pro app
+	... setup machines files (we'll use CEs 2-9) ...
+	sysmc -ce 2 -bcs=0 init 3-9
+	mpirun -s 0x80000 -h 0x2000000 parallel/getput.exe -np 8
+	sysmc -ce 2 reset 3-9
+
+
+6. Run benchmarks
+
+   Sourcery VSIPL++ also includes a number of micro-benchmarks that
+   measure the performance of various kernels in the library.  These
+   are located in the 'benchmarks' directory and can be built with
+   a 'make.standalone' makefile located in that directory.
+
+   (The examples below assume that you are using pkg-config.  If not,
+   you will need to edit make.standalone as above).
+
+   For example, to build the vector-multiply benchmark (note the
+   'ppc_le' extension may be different on your system):
+
+	> cd benchmarks
+	> make -f make.standalone vmul
+
+   The resulting executable can be run (assuming the existence of
+   a run1.sh script to run a program on the multi-computer as
+   described in step #4).
+
+	> run1.sh vmul -2 -ops -stop 20
+
+   You'll notice that the benchmarks take command line arguments.
+   Their documentation is outside the scope of these release notes,
+   but in general:
+
+    '-<number>' indicates which benchmark case to run
+                (for the vmul benchmark, '-2' indicates complex vector
+                element-wise multiply, equiv to SAL cvmulx/zvmulx routines).
+    '-ops'      specifies that the metric of MOPS (10e6 operations per
+                second should) be reported.
+    '-stop 20'  indicates that the parameter sweep should stop at 2^20.
+
+   On a 400 MHz PowerPC 7400, running this benchmark results in:
+
+	> run1.sh vmul -2 -ops -stop 20
+	# what             : t_vmul1 (2)
+	# nproc            : 1
+	# ops_per_point(1) : 6
+	# riob_per_point(1): 16
+	# wiob_per_point(1): 8
+	# metric           : ops_per_sec
+	# start_loop       : 627602
+	      4 83.979149
+	      8 133.949539
+	     16 240.983109
+	     32 370.366150
+	     64 506.207062
+	    128 619.928589
+	    256 698.406006
+	    512 745.560547
+	   1024 771.593140
+	   2048 266.879211
+	   4096 278.915466
+	   8192 281.354065
+	  16384 282.229004
+	  32768 210.128235
+	  65536 210.507278
+	 131072 140.479614
+	 262144 95.163933
+	 524288 95.086884
+	1048576 94.869621
+
+   The MFLOPS number for a 1024 point multiply (for vmul, an OP is a FLOP)
+   is on-par with expected performance for this platform.
+
+7. Implemented Functionality on MCOE
+
+Sourcery VSIPL++ when running on MCOE has the following restrictions
+at this time.
+
+ - The solvers only support single-precision.  The LU solver can be
+   configured for double-precision in some cases.  Contact CodeSourcery
+   for more details.
+
+ - The QRD solver only supports partial (qrd_saveq1) or no (qrd_nosaveq)
+   storage of the Q matrix.
+
+ - The SVD solver only support matrices with m >= n.
+
+ - The Fft and Fftm objects only support power of two sizes when using
+   just that SAL FFT backend.  When the FFTW3 backend is used (either
+   in conjunction with the SAL backend, or in place of it), all sizes
+   are supported.
+
+
+Please let us know if you have any questions or feedback on using
+Sourcery VSIPL++.  We are very excited to have you using the product
+and want to make sure that it works well!
+
+			thanks,
+			-- The CodeSourcery VSIPL++ team

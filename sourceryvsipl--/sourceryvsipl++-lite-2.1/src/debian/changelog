@@ -1,0 +1,5 @@
+libsourceryvsipl++ (1.4~soma-ubuntu1) jaunty; urgency=low
+
+  * Initial release (LP: 257576) 
+
+ -- Stuart Layton <slayton@mit.edu>  Fri, 19 Jun 2009 14:26:11 -0400

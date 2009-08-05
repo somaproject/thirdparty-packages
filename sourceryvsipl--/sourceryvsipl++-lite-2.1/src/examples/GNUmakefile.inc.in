@@ -1,0 +1,90 @@
+######################################################### -*-Makefile-*-
+#
+# File:   GNUmakefile.inc.in
+# Author: Mark Mitchell 
+# Date:   2005-05-25
+#
+# Contents: Makefile fragment for examples.
+#
+########################################################################
+
+########################################################################
+# Variables
+########################################################################
+
+examples_CXXINCLUDES := -I$(srcdir)/src
+examples_CXXFLAGS := $(examples_CXXINCLUDES)
+
+examples_cxx_sources := $(wildcard $(srcdir)/examples/*.cpp)
+ifndef VSIP_CSL_HAVE_PNG
+examples_cxx_sources := $(filter-out %png.cpp %sobel.cpp %stencil.cpp, \
+                          $(examples_cxx_sources))
+endif
+ifdef VSIP_IMPL_REF_IMPL
+examples_cxx_sources := $(filter-out %extdata.cpp, $(examples_cxx_sources))
+examples_cxx_sources := $(filter-out %mprod.cpp, $(examples_cxx_sources))
+endif
+examples_cxx_objects := \
+	$(patsubst $(srcdir)/%.cpp, %.$(OBJEXT), $(examples_cxx_sources))
+cxx_sources += $(examples_cxx_sources)
+
+examples_cxx_exes := \
+	$(patsubst $(srcdir)/%.cpp, %$(EXEEXT), $(examples_cxx_sources))
+
+examples_vcproj_files := \
+	examples/vcproj/SourceryVSIPL++-examples.sln \
+	examples/vcproj/fft/fft.vcproj \
+	examples/vcproj/fft/fft.icproj \
+	examples/vcproj/vmul/vmul.vcproj \
+	examples/vcproj/vmul/vmul.icproj
+
+define generate_vcproj
+cat $< | sed -b -e "s|@prefix_@|$(prefix)|" \
+           -e "s|@CPPFLAGS_@|@CPPFLAGS@|" \
+           -e "s|@LDFLAGS_@|$(patsubst -l%,lib%.lib, $(subst -L,/libpath:, $(LDFLAGS)))|" \
+           -e "s|@LIBS_@|$(patsubst -l%,lib%.lib, $(subst -L,/libpath:, $(LIBS)))|" \
+          > $@
+endef
+
+vpath %.pre $(srcdir)
+
+########################################################################
+# Rules
+########################################################################
+
+examples/png: override LIBS += -lpng
+examples/sobel: override LIBS += -lpng
+examples/stencil: override LIBS += -lpng
+
+examples: $(examples_cxx_exes)
+
+# Object files will be deleted by the parent clean rule.
+clean::
+	rm -f $(examples_cxx_exes)
+
+$(examples_vcproj_files): %: %.pre
+	mkdir -p `dirname $@`
+	$(generate_vcproj)
+
+ifdef INTEL_WIN
+install:: $(examples_vcproj_files)
+endif
+
+install-svxx::
+	$(INSTALL) -d $(DESTDIR)$(pkgdatadir)
+	$(INSTALL_DATA) $(examples_cxx_sources) $(DESTDIR)$(pkgdatadir)
+	$(INSTALL_DATA) examples/makefile.standalone \
+	  $(DESTDIR)$(pkgdatadir)/Makefile
+ifdef INTEL_WIN
+	$(INSTALL) -d $(DESTDIR)$(pkgdatadir)/vcproj
+	$(INSTALL) -d $(DESTDIR)$(pkgdatadir)/vcproj/fft
+	$(INSTALL) -d $(DESTDIR)$(pkgdatadir)/vcproj/vmul
+	for file in $(patsubst examples/%, %, $(examples_vcproj_files)); do \
+          $(INSTALL_DATA) examples/$$file \
+            $(DESTDIR)$(pkgdatadir)/`dirname $$file`; \
+	done
+endif
+
+$(examples_cxx_exes): %$(EXEEXT): %.$(OBJEXT) $(libs)
+	$(link_app)
+
